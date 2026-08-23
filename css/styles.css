@@ -119,15 +119,15 @@ button { font-family: inherit; cursor: pointer; }
 
 .landing-earth {
   position: absolute;
-  left: 50%; bottom: -206vw;
-  width: 220vw; height: 220vw;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(150, 210, 255, 0.7) 0%, transparent 4%),
-    radial-gradient(circle at 50% 2%, #3f8fe0 0%, #1b4f9e 4%, #0e2a5e 9%, #081a3d 18%);
-  box-shadow: 0 -30px 120px rgba(80, 150, 255, 0.45), inset 0 30px 90px rgba(160, 220, 255, 0.25);
+  left: 0; right: 0; bottom: 0;
+  height: 30vh;
   pointer-events: none;
+  filter: drop-shadow(0 -24px 90px rgba(80, 150, 255, 0.4));
+}
+.landing-earth svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .landing-ship {
@@ -295,6 +295,19 @@ button { font-family: inherit; cursor: pointer; }
     radial-gradient(ellipse 60% 90% at 75% 100%, #256b44 0%, transparent 70%),
     linear-gradient(180deg, transparent 0%, #1d5c3a 55%, #144a2e 100%);
 }
+.deco-hill {
+  bottom: 0;
+  border-radius: 50% 50% 0 0;
+}
+.deco-hill.h1 {
+  left: -8%; width: 55%; height: 24%;
+  background: radial-gradient(ellipse at 50% 0%, #37965c 0%, #256b44 70%);
+}
+.deco-hill.h2 {
+  right: -6%; width: 48%; height: 19%;
+  background: radial-gradient(ellipse at 50% 0%, #2f8a52 0%, #1d5c3a 70%);
+}
+.deco.tree { filter: drop-shadow(0 4px 6px rgba(10, 30, 18, 0.35)); }
 .deco-pad {
   left: 50%; bottom: 4%; width: 150px; height: 14px;
   transform: translateX(-50%);
@@ -302,22 +315,20 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: 0 6px 0 #232c44, 0 0 30px rgba(255,180,94,0.3);
 }
 .deco-sun {
-  top: 12%; right: 12%; width: 90px; height: 90px; border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%, #fff3c4, #ffd166 55%, #ff9a3d);
-  box-shadow: 0 0 70px 24px rgba(255, 200, 90, 0.5);
+  top: 8%; right: 10%; width: 120px;
+  filter: drop-shadow(0 0 34px rgba(255, 200, 90, 0.55));
+  animation: sunSpin 40s linear infinite;
 }
-.deco-cloud {
-  width: 150px; height: 46px; border-radius: 40px;
-  background: rgba(255, 255, 255, 0.9);
-  filter: blur(1px);
+@keyframes sunSpin { to { transform: rotate(360deg); } }
+.cloud {
+  filter: drop-shadow(0 8px 14px rgba(40, 70, 120, 0.28));
   animation: drift 9s ease-in-out infinite alternate;
 }
-.deco-cloud::before, .deco-cloud::after {
-  content: ''; position: absolute; border-radius: 50%; background: inherit;
-}
-.deco-cloud::before { width: 64px; height: 64px; top: -28px; left: 26px; }
-.deco-cloud::after { width: 44px; height: 44px; top: -18px; right: 26px; }
+.cloud.c2 { animation-duration: 12s; animation-delay: -3s; }
+.cloud.c3 { animation-duration: 10.5s; animation-delay: -6s; }
 @keyframes drift { from { transform: translateX(-24px); } to { transform: translateX(24px); } }
+.float-slow { animation: floatY 7s ease-in-out infinite alternate; }
+@keyframes floatY { from { transform: translateY(-14px); } to { transform: translateY(14px); } }
 
 .deco-star {
   width: 2px; height: 2px; border-radius: 50%;
@@ -325,41 +336,20 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: 0 0 6px 1px rgba(255,255,255,0.7);
   animation: twinkle 3s ease-in-out infinite alternate;
 }
-.deco-moon {
-  top: 16%; left: 12%; width: 110px; height: 110px; border-radius: 50%;
-  background:
-    radial-gradient(circle at 65% 35%, #f2f2f0 0%, #c9c9c4 45%, #8f8f8a 100%);
-  box-shadow: 0 0 50px rgba(230, 230, 220, 0.35), inset -14px -10px 30px rgba(60,60,70,0.5);
+.deco-moon-svg {
+  top: 14%; left: 10%; width: 130px;
+  filter: drop-shadow(0 0 40px rgba(230, 230, 220, 0.3));
 }
-.deco-moon::before, .deco-moon::after {
-  content: ''; position: absolute; border-radius: 50%; background: rgba(120,120,118,0.55);
+.deco-saturn-svg {
+  top: 18%; right: 6%; width: 250px;
+  filter: drop-shadow(0 0 44px rgba(230, 160, 90, 0.3));
 }
-.deco-moon::before { width: 22px; height: 22px; top: 30%; left: 30%; }
-.deco-moon::after { width: 14px; height: 14px; top: 58%; left: 55%; }
-.deco-planet {
-  top: 20%; right: 10%; width: 130px; height: 130px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #ffd9a0, #e0954f 50%, #8f4f2a);
-  box-shadow: 0 0 60px rgba(230, 150, 80, 0.35);
+.deco-galaxy-svg {
+  top: 12%; left: 50%; width: 260px;
+  margin-left: -130px;
+  animation: galaxySpin 50s linear infinite;
 }
-.deco-planet::after {
-  content: ''; position: absolute;
-  left: 50%; top: 50%;
-  width: 210px; height: 58px;
-  transform: translate(-50%, -50%) rotate(-18deg);
-  border: 9px solid rgba(255, 214, 150, 0.45);
-  border-radius: 50%;
-}
-.deco-satellite { top: 24%; left: 16%; font-size: 44px; animation: drift 7s ease-in-out infinite alternate; }
-.deco-galaxy {
-  top: 14%; left: 50%; width: 240px; height: 240px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(255, 240, 210, 0.9) 0%, rgba(255, 180, 220, 0.35) 22%, rgba(140, 90, 255, 0.18) 45%, transparent 70%);
-  filter: blur(2px);
-  animation: galaxySpin 40s linear infinite;
-}
-@keyframes galaxySpin { to { transform: translateX(-50%) rotate(360deg); } }
+@keyframes galaxySpin { to { transform: rotate(360deg); } }
 
 /* ---------------- ship ---------------- */
 #ship-layer {

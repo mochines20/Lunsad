@@ -77,29 +77,52 @@ function buildWorld() {
 function decorationsFor(id) {
   switch (id) {
     case 'earth':
-      return `<div class="deco deco-ground"></div><div class="deco deco-pad"></div>
-              <div class="deco deco-sun"></div>
-              <div class="deco deco-cloud" style="top:18%;left:12%"></div>
-              <div class="deco deco-cloud" style="top:34%;right:10%;transform:scale(0.7)"></div>`;
+      return `
+        <div class="deco deco-ground"></div>
+        <div class="deco deco-hill h1"></div>
+        <div class="deco deco-hill h2"></div>
+        <svg class="deco tree" style="left:7%;bottom:24%;width:64px" viewBox="-45 -45 90 105"><use href="#tree-shape"/></svg>
+        <svg class="deco tree" style="left:20%;bottom:13%;width:44px" viewBox="-45 -45 90 105"><use href="#tree-shape"/></svg>
+        <svg class="deco tree" style="right:9%;bottom:22%;width:56px" viewBox="-45 -45 90 105"><use href="#tree-shape"/></svg>
+        <svg class="deco" style="right:22%;bottom:11%;width:52px" viewBox="-35 -25 70 40"><use href="#bush-shape"/></svg>
+        <svg class="deco" style="left:33%;bottom:7%;width:44px" viewBox="-35 -25 70 40"><use href="#bush-shape"/></svg>
+        <div class="deco deco-pad"></div>
+        <svg class="deco" style="left:calc(50% + 84px);bottom:5.5%;width:46px" viewBox="0 0 60 120"><use href="#gantry-shape"/></svg>
+        <svg class="deco deco-sun" viewBox="-75 -75 150 150"><use href="#sun-shape"/></svg>
+        <svg class="deco cloud" style="top:14%;left:9%;width:190px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
+        <svg class="deco cloud c2" style="top:30%;right:7%;width:130px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>`;
     case 'clouds':
-      return `<div class="deco deco-cloud" style="top:15%;left:8%"></div>
-              <div class="deco deco-cloud" style="top:38%;right:6%;transform:scale(1.3)"></div>
-              <div class="deco deco-cloud" style="top:62%;left:22%;transform:scale(0.8)"></div>
-              <div class="deco deco-cloud" style="top:80%;right:24%"></div>`;
+      return `
+        <svg class="deco cloud" style="top:10%;left:6%;width:210px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
+        <svg class="deco cloud c2" style="top:34%;right:5%;width:260px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
+        <svg class="deco cloud c3" style="top:58%;left:18%;width:170px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
+        <svg class="deco cloud" style="top:78%;right:20%;width:200px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>`;
     case 'atmosphere':
-      return `<div class="deco deco-cloud" style="top:70%;left:10%;opacity:0.5"></div>
-              <div class="deco deco-cloud" style="top:82%;right:12%;opacity:0.4;transform:scale(0.7)"></div>
-              ${starField(10)}`;
+      return `
+        <svg class="deco cloud" style="top:66%;left:8%;width:180px;opacity:0.55" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
+        <svg class="deco cloud c2" style="top:80%;right:10%;width:140px;opacity:0.45" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
+        ${starField(10)}`;
     case 'stratosphere':
-      return `<div class="deco deco-satellite">🎈</div>${starField(26)}`;
+      return `
+        <svg class="deco float-slow" style="top:16%;left:14%;width:72px" viewBox="-32 -62 64 104"><use href="#balloon-shape"/></svg>
+        ${starField(26)}`;
     case 'orbit':
-      return `<div class="deco deco-satellite">🛰️</div>${starField(46)}`;
+      return `
+        <svg class="deco float-slow" style="top:20%;left:13%;width:120px" viewBox="-55 -30 110 60"><use href="#sat-shape"/></svg>
+        <svg class="deco float-slow" style="top:58%;right:10%;width:80px;opacity:0.75" viewBox="-55 -30 110 60"><use href="#sat-shape"/></svg>
+        ${starField(46)}`;
     case 'moon':
-      return `<div class="deco deco-moon"></div>${starField(56)}`;
+      return `
+        <svg class="deco deco-moon-svg" viewBox="0 0 140 140"><use href="#moon-shape"/></svg>
+        ${starField(56)}`;
     case 'deepspace':
-      return `<div class="deco deco-planet"></div>${starField(70)}`;
+      return `
+        <svg class="deco deco-saturn-svg float-slow" viewBox="-140 -75 280 150"><use href="#saturn-shape"/></svg>
+        ${starField(70)}`;
     case 'galaxy':
-      return `<div class="deco deco-galaxy"></div>${starField(90)}`;
+      return `
+        <svg class="deco deco-galaxy-svg" viewBox="-130 -130 260 260"><use href="#galaxy-shape"/></svg>
+        ${starField(90)}`;
     default: return '';
   }
 }
