@@ -65,3 +65,17 @@ python3 -m http.server 12000   # serves index.html; previews on the work-1 host
 - Boost kbd badges sit top-left (count badge top-right, name bottom).
 - Results: grade centered, MISSION FAILED eyebrow turns red
   (.results-eyebrow-fail).
+
+## Design Refinement v3 (presentation-only layer)
+- Landing: .landing-content padding-bottom reserves Earth zone (no
+  collisions); auth buttons are 46px tap targets with 2px borders.
+- Hangar: decorative sprites (.hangar-deco-l/r/sat: saturn/moon/satellite,
+  decoDrift keyframes); hero ship 118px; DUO has .lock-badge + grayscale
+  icon + dashed border.
+- Game: #para-stars.on denser; altimeter 3px track, zone labels with dark
+  chips, #alt-marker::after markerPulse ring; .q-timer segmented via
+  repeating-linear-gradient; .opt-key = filled cyan chips; booster tray
+  min-width 86px, count badges 22px with dark outline.
+- Responsive breakpoints: 640px (stacked auth, hidden altimeter) and
+  max-height 700px (compact landing/question panel).
+- Rule: pixel font only for headings/labels; answers/body = Chakra Petch.

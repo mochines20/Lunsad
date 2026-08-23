@@ -1264,3 +1264,200 @@ kbd {
 }
 
 .results-eyebrow-fail { color: var(--red) !important; text-shadow: 0 0 16px rgba(255,92,122,0.5); }
+
+
+/* ============================================================
+   DESIGN REFINEMENT v3 — polish, hierarchy, responsive
+   (presentation only; no game-logic changes)
+   ============================================================ */
+
+/* ---------- 0. consistency tokens ---------- */
+/* interactive elements: 2px borders, hard offset shadows, square corners */
+.mode-card, .q-opt, .boost-btn, .btn-auth, .chip-btn { border-width: 2px; }
+.mode-card, .q-opt, .boost-btn { transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease; }
+
+/* pixel font stays on headings/labels; body + answers stay on Chakra Petch */
+#q-text, .q-opt, #fact-text, .help-list em, .landing-sub { font-family: var(--font-display), 'Segoe UI', sans-serif; }
+
+/* ============================================================
+   1. LANDING / AUTH
+   ============================================================ */
+/* reserve the Earth zone — content can never collide with the planet */
+.landing-content {
+  padding-top: clamp(20px, 6vh, 64px);
+  padding-bottom: calc(24vh + 30px);
+}
+.landing-earth { height: 24vh; }
+.landing-ship { bottom: 17vh; width: 48px; }
+
+/* auth buttons: real tap targets, higher contrast */
+.auth-buttons { gap: 12px; }
+.btn-auth {
+  min-width: 136px;
+  min-height: 46px;
+  padding: 13px 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  background: rgba(28, 38, 74, 0.95);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45);
+}
+.btn-auth:hover { border-color: var(--cyan); transform: translateY(-2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.45), 0 0 16px rgba(47,214,255,0.18); }
+.btn-auth:active { transform: translateY(1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.45); }
+
+/* ============================================================
+   2. HANGAR / MENU
+   ============================================================ */
+/* bigger hero ship + decorative drifting planets fill the upper space */
+.hangar-body { gap: 30px; padding-top: 2vh; }
+.hangar-ship-wrap .ship-svg { width: 118px; }
+.hangar-deco { position: absolute; pointer-events: none; z-index: 1; opacity: 0.85; }
+.hangar-deco-l { top: 14%; left: 7%; width: 84px; animation: decoDrift 9s ease-in-out infinite; }
+.hangar-deco-r { top: 22%; right: 8%; width: 52px; animation: decoDrift 7s 1.2s ease-in-out infinite; }
+.hangar-deco-sat { top: 52%; left: 14%; width: 40px; animation: decoDrift 11s 0.6s ease-in-out infinite; opacity: 0.7; }
+@keyframes decoDrift {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-16px) rotate(2deg); }
+}
+
+/* mode cards: clear hover / press / locked states */
+.mode-card { position: relative; box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45); }
+.mode-card:hover:not(.locked) {
+  transform: translateY(-4px);
+  border-color: var(--amber);
+  box-shadow: 6px 8px 0 rgba(0, 0, 0, 0.45), 0 0 24px rgba(255, 180, 94, 0.14);
+}
+.mode-card:active:not(.locked) { transform: translateY(-1px); box-shadow: 3px 3px 0 rgba(0,0,0,0.45); }
+.mode-card.locked { opacity: 1; border-style: dashed; cursor: not-allowed; background: rgba(10, 14, 32, 0.85); }
+.mode-card.locked .mode-icon { filter: grayscale(1) brightness(0.55); }
+.mode-card.locked > span, .mode-card.locked em { opacity: 0.45; }
+.lock-badge {
+  position: absolute; top: 7px; right: 7px;
+  font-family: var(--font-pixel);
+  font-size: 7px; letter-spacing: 1px;
+  color: var(--ink-dim);
+  background: rgba(5, 6, 15, 0.85);
+  border: 2px solid var(--panel-edge);
+  padding: 4px 6px;
+}
+
+/* ============================================================
+   3. QUIZ GAMEPLAY
+   ============================================================ */
+/* denser, brighter parallax stars fill the sky above the card */
+#para-stars.on {
+  opacity: 1;
+  background-image:
+    radial-gradient(2px 2px at 8% 12%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 18% 44%, #cfe4ff 50%, transparent 51%),
+    radial-gradient(2px 2px at 27% 78%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 36% 25%, #ffe6c4 50%, transparent 51%),
+    radial-gradient(2px 2px at 47% 58%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 52% 90%, #cfe4ff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 58% 8%, #cfe4ff 50%, transparent 51%),
+    radial-gradient(2px 2px at 66% 36%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 74% 68%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 83% 20%, #ffe6c4 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 91% 52%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 96% 88%, #cfe4ff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 13% 92%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 41% 4%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 4% 64%, #ffe6c4 50%, transparent 51%);
+}
+
+/* altimeter: clearer track, legible labels, pulsing position marker */
+#altimeter { width: 64px; border-left: 3px solid rgba(120, 150, 220, 0.35); }
+.alt-tick { height: 2px; background: rgba(120, 150, 220, 0.6); }
+.alt-tick.zone-tick { width: 24px; height: 3px; }
+.alt-tick em {
+  font-size: 9px;
+  color: var(--ink);
+  background: rgba(5, 6, 15, 0.75);
+  border: 1px solid rgba(120, 150, 220, 0.25);
+  padding: 2px 5px;
+  top: -8px;
+}
+#alt-marker { left: -10px; font-size: 17px; color: var(--gold); text-shadow: 0 0 12px rgba(255, 209, 102, 0.9); }
+#alt-marker::after {
+  content: '';
+  position: absolute; inset: -7px;
+  border: 2px solid rgba(255, 209, 102, 0.55);
+  animation: markerPulse 1.3s ease-out infinite;
+}
+@keyframes markerPulse {
+  from { transform: scale(0.6); opacity: 1; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+
+/* question card: segmented step timer */
+.q-timer { height: 14px; border: 2px solid var(--panel-edge); background: rgba(5, 6, 15, 0.65); }
+#q-timer-bar {
+  background: repeating-linear-gradient(90deg, var(--cyan) 0 8px, rgba(47, 214, 255, 0.5) 8px 11px);
+  box-shadow: 0 0 10px rgba(47, 214, 255, 0.45);
+}
+#q-timer-bar.low { background: repeating-linear-gradient(90deg, var(--red) 0 8px, rgba(255, 92, 122, 0.45) 8px 11px); }
+
+/* answer options: high-contrast number badges + press state */
+.opt-key {
+  width: 22px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--cyan);
+  color: #062a33;
+  font-size: 10px;
+  border: none;
+  flex: 0 0 auto;
+}
+.q-opt.correct .opt-key { background: var(--green); color: #06301c; }
+.q-opt.wrong .opt-key { background: var(--red); color: #3a0a14; }
+.q-opt:hover:not(:disabled) { box-shadow: 0 0 14px rgba(47, 214, 255, 0.16), 4px 4px 0 rgba(0,0,0,0.4); }
+.q-opt:active:not(:disabled) { transform: scale(0.98); }
+
+/* power-up tray: breathing room, legible counts, clear affordance */
+#booster-bar { gap: 14px; padding: 12px 12px 16px; }
+.boost-btn { min-width: 86px; padding: 11px 10px 8px; }
+.boost-btn .px-slot { width: 22px; }
+.boost-btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.05);
+  border-color: var(--amber);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45), 0 0 18px rgba(255, 180, 94, 0.25);
+}
+.boost-btn:active:not(:disabled) { transform: scale(0.97); }
+.boost-count {
+  min-width: 22px; height: 22px;
+  font-size: 12px;
+  top: -9px; right: -7px;
+  border: 2px solid #241203;
+}
+
+/* ============================================================
+   4. RESPONSIVE SCALING
+   ============================================================ */
+@media (max-width: 640px) {
+  .auth-buttons { flex-direction: column; align-items: stretch; width: min(320px, 84vw); margin: 0 auto; }
+  .btn-auth { width: 100%; }
+  .landing-earth { height: 20vh; }
+  .landing-ship { bottom: 14vh; width: 40px; }
+  .landing-content { padding-bottom: calc(20vh + 20px); }
+  .hangar-deco-l { width: 60px; left: 4%; }
+  .hangar-deco-r { width: 38px; right: 5%; }
+  .hangar-deco-sat { display: none; }
+  .hangar-ship-wrap .ship-svg { width: 88px; }
+  .mode-card { width: 132px; }
+  #booster-bar { flex-wrap: wrap; gap: 10px; }
+  .boost-btn { min-width: 62px; padding: 9px 8px 7px; }
+  #altimeter { display: none; }
+  #btn-abandon { top: 56px; right: 12px; }
+}
+@media (max-height: 700px) {
+  .landing-content { padding-top: 12px; padding-bottom: calc(19vh + 16px); }
+  .landing-earth { height: 19vh; }
+  .landing-ship { bottom: 13vh; width: 38px; }
+  .landing-logo { margin-bottom: 4px; }
+  .landing-sub { margin-bottom: 16px; }
+  .landing-actions { margin-bottom: 20px; }
+  .landing-auth { margin-top: 18px; }
+  .btn-help { margin-top: 14px; margin-bottom: 0; }
+  .hangar-body { gap: 14px; }
+  .hangar-ship-wrap .ship-svg { width: 76px; }
+  #question-panel { padding: 14px 16px 16px; }
+  #q-text { min-height: 0; margin-bottom: 12px; }
+}
