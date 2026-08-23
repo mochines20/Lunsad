@@ -22,14 +22,14 @@
     <p class="landing-tagline">Launch Your Knowledge</p>
     <p class="landing-sub">The higher you answer, the farther you go.<br>How high can you go?</p>
     <div class="landing-actions">
-      <button class="btn btn-primary btn-lg" id="btn-launch-start">🚀 START MISSION</button>
+      <button class="btn btn-primary btn-lg" id="btn-launch-start"><span class="px-slot" data-icn="rocket"></span> START MISSION</button>
     </div>
     <div class="landing-auth">
       <p class="auth-label">CONTINUE WITH</p>
       <div class="auth-buttons">
-        <button class="btn btn-auth" data-auth="google">🔵 Google</button>
-        <button class="btn btn-auth" data-auth="apple"> Apple</button>
-        <button class="btn btn-auth" data-auth="email">✉️ Email</button>
+        <button class="btn btn-auth" data-auth="google">Google</button>
+        <button class="btn btn-auth" data-auth="apple"><span class="emoji"></span> Apple</button>
+        <button class="btn btn-auth" data-auth="email"><span class="emoji">✉️</span> Email</button>
       </div>
     </div>
   </div>
@@ -59,8 +59,8 @@
   <header class="hangar-top">
     <div class="hangar-brand">LUNSAD</div>
     <div class="hangar-stats">
-      <span class="stat-chip" title="Stardust">✨ <b id="hangar-dust">0</b></span>
-      <span class="stat-chip" title="Best altitude">📡 <b id="hangar-best">0m</b></span>
+      <span class="stat-chip" title="Stardust"><span class="px-slot" data-icn="dust"></span> <b id="hangar-dust">0</b></span>
+      <span class="stat-chip" title="Best altitude"><span class="px-slot" data-icn="radar"></span> <b id="hangar-best">0m</b></span>
       <span class="stat-chip pilot-chip"><span id="hangar-avatar">👨‍🚀</span> <b id="hangar-name">Pilot</b></span>
     </div>
   </header>
@@ -70,11 +70,11 @@
       <div class="hangar-ship-name">LUNSAD-01</div>
       <div class="hangar-alt">CURRENT RECORD <b id="hangar-alt-num">0m</b></div>
     </div>
-    <button class="btn btn-primary btn-xl pulse" id="btn-play">🚀 PLAY NOW</button>
+    <button class="btn btn-primary btn-xl pulse" id="btn-play"><span class="px-slot" data-icn="rocket"></span> PLAY NOW</button>
     <div class="hangar-modes">
-      <button class="mode-card" id="mode-solo"><span class="mode-icon">🚀</span><span>SOLO</span><em>10 questions · 3 energy</em></button>
-      <button class="mode-card locked" id="mode-duo" disabled><span class="mode-icon">🏆</span><span>DUO</span><em>coming soon</em></button>
-      <button class="mode-card" id="mode-map"><span class="mode-icon">🗺️</span><span>FLIGHT MAP</span><em>see the journey</em></button>
+      <button class="mode-card" id="mode-solo"><span class="mode-icon px-slot" data-icn="rocket"></span><span>SOLO</span><em>10 questions · 3 energy</em></button>
+      <button class="mode-card locked" id="mode-duo" disabled><span class="mode-icon px-slot" data-icn="medalS"></span><span>DUO</span><em>coming soon</em></button>
+      <button class="mode-card" id="mode-map"><span class="mode-icon px-slot" data-icn="radar"></span><span>FLIGHT MAP</span><em>see the journey</em></button>
     </div>
   </div>
 </section>
@@ -114,8 +114,8 @@
   <!-- HUD -->
   <header id="hud">
     <div class="hud-left">
-      <span id="hud-energy" class="hud-energy">❤️❤️❤️</span>
-      <span id="hud-dust" class="hud-dust">✨ 0</span>
+      <span id="hud-energy" class="hud-energy"></span>
+      <span id="hud-dust" class="hud-dust"><span class="px-slot" data-icn="dust"></span> <b>0</b></span>
     </div>
     <div class="hud-center">
       <div id="hud-zone">EARTH</div>
@@ -140,7 +140,7 @@
 
   <!-- Fact toast -->
   <div id="fact-toast" class="hidden">
-    <div class="fact-label">💡 DID YOU KNOW?</div>
+    <div class="fact-label"><span class="px-slot" data-icn="bulb"></span> DID YOU KNOW?</div>
     <p id="fact-text"></p>
   </div>
 
@@ -149,11 +149,11 @@
 
   <!-- Boosters / hints bar -->
   <footer id="booster-bar">
-    <button class="boost-btn" data-boost="radar" title="Radar — remove one wrong answer">💡<span>RADAR</span><i class="boost-count"></i></button>
-    <button class="boost-btn" data-boost="scan" title="Scan — show a clue">🛰️<span>SCAN</span><i class="boost-count"></i></button>
-    <button class="boost-btn" data-boost="boost" title="Boost — 2× thrust on next correct">🚀<span>BOOST</span><i class="boost-count"></i></button>
-    <button class="boost-btn" data-boost="shield" title="Shield — block next altitude loss">🛡️<span>SHIELD</span><i class="boost-count"></i></button>
-    <button class="boost-btn" data-boost="warp" title="Warp — skip question, -300m">⏭️<span>WARP</span><i class="boost-count"></i></button>
+    <button class="boost-btn" data-boost="radar" title="Radar — remove one wrong answer [R]"><span class="px-slot" data-icn="radar"></span><span class="boost-name">RADAR</span><i class="boost-count"></i><kbd>R</kbd></button>
+    <button class="boost-btn" data-boost="scan" title="Scan — show a clue [S]"><span class="px-slot" data-icn="scan"></span><span class="boost-name">SCAN</span><i class="boost-count"></i><kbd>S</kbd></button>
+    <button class="boost-btn" data-boost="boost" title="Boost — 2× thrust on next correct [B]"><span class="px-slot" data-icn="bolt"></span><span class="boost-name">BOOST</span><i class="boost-count"></i><kbd>B</kbd></button>
+    <button class="boost-btn" data-boost="shield" title="Shield — block next altitude loss [H]"><span class="px-slot" data-icn="shield"></span><span class="boost-name">SHIELD</span><i class="boost-count"></i><kbd>H</kbd></button>
+    <button class="boost-btn" data-boost="warp" title="Warp — skip question, -300m [W]"><span class="px-slot" data-icn="warp"></span><span class="boost-name">WARP</span><i class="boost-count"></i><kbd>W</kbd></button>
   </footer>
 
   <button id="btn-abandon" title="Abort mission">✕</button>
@@ -173,7 +173,8 @@
   <div class="landing-stars"></div>
   <div class="panel results-panel">
     <p class="panel-eyebrow" id="results-eyebrow">MISSION COMPLETE</p>
-    <h2 class="results-title" id="results-title">🌌 YOU REACHED ORBIT</h2>
+    <h2 class="results-title" id="results-title">YOU REACHED ORBIT</h2>
+    <div id="results-record" class="hidden">★ NEW RECORD ★</div>
     <div class="results-grade" id="results-grade">A</div>
     <div class="results-grid">
       <div class="res-stat"><em>FINAL ALTITUDE</em><b id="res-alt">0m</b></div>
@@ -182,7 +183,7 @@
       <div class="res-stat"><em>STARDUST EARNED</em><b id="res-dust">+0</b></div>
     </div>
     <div class="results-actions">
-      <button class="btn btn-primary" id="btn-again">🚀 FLY AGAIN</button>
+      <button class="btn btn-primary" id="btn-again"><span class="px-slot" data-icn="rocket"></span> FLY AGAIN</button>
       <button class="btn btn-ghost" id="btn-hangar">HANGAR</button>
     </div>
   </div>

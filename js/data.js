@@ -356,6 +356,121 @@ const PXART = {
   ]}
 };
 
+
+/* ---------- pixel UI icons (hearts, dust, boosts, medals) ---------- */
+const PXICON = {
+  heart: { w: 7, rows: [
+    ".RR.RR.",
+    "RRRRRRR",
+    "RRRRRRR",
+    "RRRRRRR",
+    ".RRRRR.",
+    "..RRR..",
+    "...R..."
+  ]},
+  heartEmpty: { w: 7, rows: [
+    ".bb.bb.",
+    "b..b..b",
+    "b.....b",
+    "b.....b",
+    ".b...b.",
+    "..b.b..",
+    "...b..."
+  ]},
+  dust: { w: 7, rows: [
+    "...Y...",
+    "...Y...",
+    ".Y.YY.Y",
+    "..YYY..",
+    ".Y.YY.Y",
+    "...Y...",
+    "...Y..."
+  ]},
+  radar: { w: 9, rows: [
+    "...KKK...",
+    "..KGGGK..",
+    ".KGKKGKG.",
+    ".KGKKK...",
+    ".KGKKGKG.",
+    "..KGGGK..",
+    "...KKK...",
+    "....K....",
+    "..KKKKK.."
+  ]},
+  scan: { w: 9, rows: [
+    "..KKKKK..",
+    ".KXXXXXK.",
+    "KXKKKKKXK",
+    "KXXKKKXXK",
+    "KXKKKKKXK",
+    ".KXXXXXK.",
+    "..KKKKK..",
+    "....K....",
+    "...KKK..."
+  ]},
+  bolt: { w: 9, rows: [
+    ".....YY..",
+    "....YY...",
+    "...YY....",
+    "..YYYYY..",
+    "....YY...",
+    "...YY....",
+    "..YY.....",
+    ".YY......",
+    "YY......."
+  ]},
+  shield: { w: 9, rows: [
+    ".KKKKKKK.",
+    "KBBBBBBBK",
+    "KBBBBBBBK",
+    "KBBBBBBBK",
+    ".KBBBBBK.",
+    "..KBBBK..",
+    "...KBK...",
+    "....K...."
+  ]},
+  warp: { w: 9, rows: [
+    ".G...G...",
+    "GG.GG.GG.",
+    ".G...G...",
+    "GG.GG.GG.",
+    ".G...G..."
+  ]},
+  medalS: { w: 9, rows: [
+    ".RRR.RRR.",
+    ".RRR.RRR.",
+    "..KKKKK..",
+    ".KYYYYYK.",
+    "KYKYYYKYK",
+    "KYKKKKKYK",
+    "KYKYYYKYK",
+    ".KYYYYYK.",
+    "..KKKKK.."
+  ]},
+  rocket: { w: 7, rows: [
+    "...R...",
+    "..WWW..",
+    "..WDW..",
+    "..WWW..",
+    ".WWWWW.",
+    "..KKK..",
+    ".OO.OO."
+  ]},
+  bulb: { w: 7, rows: [
+    "..YYY..",
+    ".YYYYY.",
+    "YYYYYYY",
+    ".YYYYY.",
+    "..YYY..",
+    "..KKK..",
+    "...K..."
+  ]}
+};
+PAL.K2 = '#3a4664';
+
+/* render any PXICON art as inline svg (reuses px()) */
+function pxIcon(name, cls = '') { return px(PXICON[name], cls); }
+
 /* render pixel art to an inline SVG string; merges horizontal runs */
 function px(art, cls = '') {
   const body = [], flame = [];

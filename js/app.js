@@ -243,7 +243,8 @@ function startMission() {
   show('#screen-game');
   $('#vignette').classList.remove('danger');
   lastZone = ZONES[0];
-  $('#hud-energy').textContent = '❤️'.repeat(G.energy);
+  renderEnergy();
+  $('#hud-dust b').textContent = '0';
   $('#hud-streak').textContent = '';
   $('#ship').className = 'ship-fly';
   updateBoostBar();
@@ -310,7 +311,7 @@ function nextQuestion() {
   q.a.forEach((text, i) => {
     const b = document.createElement('button');
     b.className = 'q-opt';
-    b.textContent = text;
+    b.innerHTML = `<kbd class="opt-key">${i + 1}</kbd><span>${text}</span>`;
     b.onclick = () => answer(i);
     opts.appendChild(b);
   });
@@ -395,7 +396,7 @@ function onWrong(q, timedOut) {
   $('#hud-streak').textContent = '';
   $('#ship').classList.remove('overdrive');
   G.energy--;
-  $('#hud-energy').textContent = '❤️'.repeat(Math.max(0, G.energy)) + '🖤'.repeat(Math.max(0, TUNING.startEnergy - G.energy));
+  renderEnergy();
   $('#vignette').classList.toggle('danger', G.energy === 1);
 
   let drop = TUNING.wrongDrop;
@@ -490,13 +491,28 @@ function flash(kind) {
 
 function showFact() {
   const pool = FACTS[G.currentZone.factPool];
-  $('#fact-text').textContent = pool[Math.floor(Math.random() * pool.length)];
-  $('#fact-toast').classList.remove('hidden');
+  const text = pool[Math.floor(Math.random() * pool.length)];
+  const toast = $('#fact-toast');
+  const el = $('#fact-text');
+  toast.classList.remove('hidden');
+  clearInterval(G.factTimer);
+  let i = 0;
+  el.textContent = '';
+  G.factTimer = setInterval(() => {
+    i += 2;
+    el.textContent = text.slice(0, i);
+    if (i % 8 === 0) beep(1200, 0.015, 'square', 0.012);
+    if (i >= text.length) clearInterval(G.factTimer);
+  }, 24);
 }
 
 function addDust(n) {
   G.dust += n;
-  $('#hud-dust').textContent = '✨ ' + G.dust;
+  $('#hud-dust b').textContent = G.dust;
+  const el = $('#hud-dust');
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
 }
 
 /* ---------------- mission end ---------------- */
@@ -523,22 +539,25 @@ function endMission(completed) {
     if (G.correct === TUNING.roundSize) dustEarned += TUNING.dust.perfect;
   }
 
+  const isRecord = completed && finalAlt > profile.bestAlt;
   profile.dust += dustEarned;
   profile.bestAlt = Math.max(profile.bestAlt, finalAlt);
   saveProfile();
 
-  $('#results-eyebrow').textContent = completed ? 'MISSION COMPLETE' : '💥 MISSION FAILED';
+  $('#results-eyebrow').textContent = completed ? 'MISSION COMPLETE' : 'MISSION FAILED';
   $('#results-title').textContent = completed
-    ? `${zone.icon} YOU REACHED ${zone.name}`
+    ? `YOU REACHED ${zone.name}`
     : 'YOUR SHIP RAN OUT OF ENERGY';
+  $('#results-record').classList.toggle('hidden', !isRecord);
   const grades = [[10, 'S'], [8, 'A'], [6, 'B'], [4, 'C'], [0, 'D']];
   $('#results-grade').textContent = grades.find(([min]) => G.correct >= min)[1];
   $('#res-correct').textContent = `${G.correct}/${TUNING.roundSize}`;
-  $('#res-streak').textContent = '🔥 ×' + G.maxStreak;
+  $('#res-streak').textContent = '×' + G.maxStreak;
   setTimeout(() => {
     show('#screen-results');
     countUp($('#res-alt'), finalAlt, v => fmtAlt(v));
-    countUp($('#res-dust'), dustEarned, v => '+' + Math.round(v) + ' ✨');
+    countUp($('#res-dust'), dustEarned, v => '+' + Math.round(v));
+    if (isRecord) beep(660, 0.5, 'square', 0.05);
   }, completed ? 400 : 600);
 }
 
@@ -607,8 +626,42 @@ $('#btn-hangar').onclick = () => { sfx.click(); goHangar(); };
 $('#btn-abandon').onclick = () => { clearInterval(G.timer); G.active = false; $('#vignette').classList.remove('danger'); goHangar(); };
 $$('.boost-btn').forEach(b => b.onclick = () => useBoost(b.dataset.boost));
 
+/* keyboard controls — arcade style */
+document.addEventListener('keydown', e => {
+  if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  const k = e.key.toLowerCase();
+  const screen = ($('.screen.active') || {}).id;
+
+  if (screen === 'screen-game') {
+    if (['1', '2', '3', '4'].includes(k)) {
+      const opts = $$('.q-opt');
+      const i = +k - 1;
+      if (opts[i] && !opts[i].disabled) { opts[i].classList.add('key-press'); answer(i); }
+      return;
+    }
+    const boostKeys = { r: 'radar', s: 'scan', b: 'boost', h: 'shield', w: 'warp' };
+    if (boostKeys[k]) { useBoost(boostKeys[k]); return; }
+    if (k === 'escape') { $('#btn-abandon').click(); return; }
+  }
+  if (k === 'enter' || k === ' ') {
+    if (screen === 'screen-landing') { e.preventDefault(); $('#btn-launch-start').click(); }
+    else if (screen === 'screen-hangar') { e.preventDefault(); $('#btn-play').click(); }
+    else if (screen === 'screen-results') { e.preventDefault(); $('#btn-again').click(); }
+  }
+});
+
 /* init */
 $$('[data-px]').forEach(el => { el.innerHTML = px(PXART[el.dataset.px], el.dataset.cls || ''); });
+$$('[data-icn]').forEach(el => { el.innerHTML = pxIcon(el.dataset.icn, 'px-icn'); });
+
+function renderEnergy() {
+  $('#hud-energy').innerHTML =
+    pxIcon('heart', 'px-icn px-heart').repeat(Math.max(0, G.energy)) +
+    pxIcon('heartEmpty', 'px-icn px-heart').repeat(Math.max(0, TUNING.startEnergy - G.energy));
+  $('#hud-energy').classList.toggle('low', G.energy <= 1);
+}
 buildWorld();
 requestAnimationFrame(cameraLoop);
 show('#screen-landing');

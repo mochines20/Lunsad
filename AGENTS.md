@@ -41,3 +41,15 @@ python3 -m http.server 12000   # serves index.html; previews on the work-1 host
 - UI font: Press Start 2P (--font-pixel) for titles/buttons/HUD;
   Space Mono/Chakra Petch for body. All panels are square (no border-radius)
   with hard offset shadows.
+
+## UI/UX Improvement Pass
+- PXICON set in data.js (heart/heartEmpty/dust/radar/scan/bolt/shield/warp/
+  medalS/rocket/bulb) rendered via pxIcon(); hydrate with [data-icn] slots.
+- HUD energy = pixel hearts (renderEnergy(), blinks when 1 left);
+  stardust = pixel star icon with bump animation on gain.
+- Keyboard: 1-4 answer, R/S/B/H/W boosts, Esc abort, Enter/Space advances
+  landing/hangar/results screens. kbd badges shown on options and boosts.
+- Fact toast types out with blinking block cursor + tick sfx.
+- NEW RECORD blink tag on results (isRecord = finalAlt > prev bestAlt).
+- CRT stepped screen transitions (crtIn), stepped zone banner, attract-mode
+  blinking START button, red blinking low-timer bar, wrong-answer shake.
