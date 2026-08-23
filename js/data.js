@@ -173,3 +173,204 @@ const TUNING = {
   dust: { easy: 10, medium: 20, hard: 30, streak3: 15, streak5: 30, mission: 100, perfect: 250 },
   streakNames: { 3: 'STREAK', 5: 'BOOST', 7: 'OVERDRIVE', 10: 'LUNSAD' }
 };
+
+/* ============================================================
+   PIXEL ART — retro asset library
+   Each art is a grid of chars; px() renders them as crisp SVG.
+   ============================================================ */
+
+const PAL = {
+  K: '#182033', W: '#f2f6fc', w: '#b9c6da', R: '#ff4d4d', r: '#c22727',
+  D: '#22344f', G: '#8fd4ff', B: '#4a6fa5', b: '#33507a', O: '#ff8c1a',
+  Y: '#ffd23f', E: '#3f8fe0', e: '#2a63b8', N: '#5aa843', n: '#3c7a33',
+  C: '#ffffff', c: '#c8d4e4', M: '#c9c9c2', m: '#82827b', T: '#e8b06a',
+  t: '#a9763a', H: '#8a5a36', U: '#c99a5b', X: '#9fc2ff', S: '#ffd166',
+  P: '#c99fff', Q: '#ffe9b0', Z: '#fff6d8'
+};
+
+const SHIP_BODY = [
+  ".........KK.........",
+  "........KRRK........",
+  "........KRRK........",
+  ".......KWWWWK.......",
+  "......KWWWWWWK......",
+  ".....KWWWWWWWWK.....",
+  "....KWWWWWWWWWWK....",
+  "....KWKDDDDDDKWK....",
+  "....KWKDGGGGDKWK....",
+  "....KWKDGwwGDKWK....",
+  "....KWKDDDDDDKWK....",
+  "....KWWWKKKKWWWK....",
+  ".KBBKWWWWWWWWWWKBBK.",
+  ".KBBKWWWWRRWWWWKBBK.",
+  ".KBBKWWWRRWWWWKBBK.",
+  ".KBBbWWWWRRWWWKbbK.",
+  ".KbbKWWWWWRRWWKbbK.",
+  ".KbbKWWWWWWWWWKbbK.",
+  ".KbbKWWKKKKKWWKbbK.",
+  "..KK.KKKKKKKKK.KK.."
+];
+
+const PXART = {
+  ship: { w: 20, flameFrom: 20, rows: SHIP_BODY.concat([
+    ".......KOOOOOK......",
+    "......KOYYYYYOK.....",
+    ".......KYYYOK.......",
+    ".......KOYYOK.......",
+    "........KYOK........",
+    ".........KK........."
+  ])},
+  shipSmoke: { w: 20, flameFrom: 20, rows: SHIP_BODY.concat([
+    ".CC...KOYYYOK...CC..",
+    "CCCC..KOYYYOK..CCCCC",
+    "CCCCCc.KOYYOK.cCCCCC",
+    "cCCCCCCcKYOKcCCCCCCc",
+    ".ccCCCCcKKKKcCCCCcc.",
+    "...cccCCCCCCCCccc..."
+  ])},
+  earth: { w: 24, rows: [
+    "........EEEEEEEE........",
+    ".....EEEEEEEEEEEEEE.....",
+    "...EEEENNEEEEEEECCEEE...",
+    "..EEENNNNNEECCWWWCEEEE..",
+    ".EENNNNNNNNEEWWWWCEEEE.",
+    ".ENNNNNNNNEEEEEEWWEEEE.",
+    "EENNNNNNEEEEEEEEEWWEEEEE",
+    "EENNNNNEEEEEEEEEEEEEEEEE",
+    "EEENNEEEEEEEEWWEEEEEEEEE",
+    "EEEEEEEEEEEEWWWWEEEEEEEE",
+    "EEEEEECCEEEEWWEEEEENEEEE",
+    "EEEEECWWWWEEEEEEENNEEEEE",
+    "EEEEECWWWWEEEEEENNNNEEEE",
+    "EEEEEECCEEEEEENNNNNNEEEE",
+    "EEEEEEEEEEEEENNNNNNEEEEE",
+    "EEEEEEEEEEEEENNNNNEEEEEE",
+    ".EEEEEEEEEEEEENNNNEEEEE.",
+    ".EEEECWWEEEEEEENNNEEEEE.",
+    "..EEEWWWWEEEEEEENNEEEE..",
+    "...EEWWWWEEEEEEEEEEEEE..",
+    ".....EEEEEEEEEEEEEE.....",
+    "......EEEEEEEEEEEE......",
+    "........EEEEEEEE........"
+  ]},
+  cloud: { w: 14, rows: [
+    ".....CCCCC......",
+    "...CCCCCCCCC....",
+    "..CCCCCCCCCCCC..",
+    ".CCCCCCCCCCCCCC.",
+    "cccccccccccccc.."
+  ]},
+  tree: { w: 10, rows: [
+    "...NNNN...",
+    "..NNNNNN..",
+    ".NNNNNNNN.",
+    "NNNNNNNNNN",
+    "NnNNNNNNnN",
+    ".NNNNNNNN.",
+    "..NNNNNN..",
+    "....HH....",
+    "....HH....",
+    "...HHHH..."
+  ]},
+  bush: { w: 12, rows: [
+    "...NNN...NNN.",
+    ".NNNNNNNNNNN.",
+    "NNNNNNNNNNNNN",
+    "nNNNNNNNNNNNn"
+  ]},
+  sun: { w: 12, rows: [
+    "....SSSS....",
+    "..SSSSSSSS..",
+    ".SSSSSSSSSS.",
+    ".SSSSSSSSSS.",
+    "SSSSYSSYSSSS",
+    "SSSSSSSSSSSS",
+    ".SSSSSSSSSS.",
+    ".SSSSSSSSSS.",
+    "..SSSSSSSS..",
+    "....SSSS...."
+  ]},
+  balloon: { w: 10, rows: [
+    "..RRRRRR..",
+    ".RRRRRRRR.",
+    "RRWRRRRWRR",
+    "RRRRRRRRRR",
+    "RRWRRRRWRR",
+    ".RRRRRRRR.",
+    "..RRRRRR..",
+    "...RRRR...",
+    "....KK....",
+    "...K..K...",
+    "..UUUUU...",
+    "..UUUUU..."
+  ]},
+  satellite: { w: 16, rows: [
+    "......KK........",
+    "......KW........",
+    "XXXXKKWWKKXXXX..",
+    "XxXxKKWSKKXxXx..",
+    "XXXXKKWWKKXXXX..",
+    "......KK........"
+  ]},
+  moon: { w: 14, rows: [
+    "....MMMMMM....",
+    "..MMMMMMMMMM..",
+    ".MMMmMMMMMMMM.",
+    ".MMmmMMMMmMMM.",
+    "MMMMmMMMMmmMMM",
+    "MMMMMMMMMmmMMM",
+    "MMMmMMMMMMMMMM",
+    "MMMmmMMMMmMMMM",
+    ".MMMMMMMmMMM..",
+    ".MMMMMMMMMMM..",
+    "..MMMMMMMMMM..",
+    "....MMMMMM...."
+  ]},
+  saturn: { w: 26, rows: [
+    "..........TTTTTT..........",
+    "........TTTTTTTTTT........",
+    ".......TTtTTTTTTtTT.......",
+    "......TTTTTTTTTTTTTT......",
+    "..TTTTTTTTTTTTTTTTTTTT....",
+    ".TTTTtTTTTTTTTTTtTTTTT..",
+    "TTTTTTTTTTTTTTTTTTTTTTTTTT",
+    "..TTTTtTTTTTTTTTTtTTTT....",
+    "......TTTTTTTTTTTTTT......",
+    ".......TTtTTTTTtTT........",
+    "........TTTTTTTTTT........",
+    "..........TTTTTT.........."
+  ]},
+  galaxy: { w: 16, rows: [
+    ".....P..........",
+    "...PPP..P.......",
+    "..PPQQPPP..P....",
+    ".PPQQQQPPPPP....",
+    "..PQQQQQPPP.....",
+    "...PQQZQQPP.....",
+    "..PPQQZQQPP.P...",
+    ".PPPQQQQQPPPP...",
+    ".PPPPPQQPP...P..",
+    "..P..PPPPP..PP..",
+    ".....P..PP......",
+    "..........P....."
+  ]}
+};
+
+/* render pixel art to an inline SVG string; merges horizontal runs */
+function px(art, cls = '') {
+  const body = [], flame = [];
+  art.rows.forEach((row, y) => {
+    let x = 0;
+    while (x < row.length) {
+      const col = PAL[row[x]];
+      if (!col) { x++; continue; }
+      let run = 1;
+      while (x + run < row.length && row[x + run] === row[x]) run++;
+      const rect = `<rect x="${x}" y="${y}" width="${run}" height="1" fill="${col}"/>`;
+      (art.flameFrom != null && y >= art.flameFrom ? flame : body).push(rect);
+      x += run;
+    }
+  });
+  const flameG = flame.length ? `<g class="px-flame">${flame.join('')}</g>` : '';
+  return `<svg class="px ${cls}" viewBox="0 0 ${art.w} ${art.rows.length}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${body.join('')}${flameG}</svg>`;
+}

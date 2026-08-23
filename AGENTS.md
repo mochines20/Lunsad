@@ -29,3 +29,15 @@ python3 -m http.server 12000   # serves index.html; previews on the work-1 host
 - DUO mode is a locked placeholder
 - Auth buttons are mock (go straight to pilot setup)
 - Emojis render as boxes in headless test browsers without emoji fonts — fine on real devices
+
+## Pixel Art Theme (retro arcade)
+- All visual assets are pixel art defined in js/data.js as char grids (PXART)
+  with a shared palette (PAL); px() renders them to crisp SVG rects
+  (shape-rendering=crispEdges, CSS image-rendering: pixelated).
+- Ship flame rows (below flameFrom) render in <g class="px-flame"> for
+  stepped flicker animation.
+- To inject art into HTML: <div data-px="ship" data-cls="ship-svg"></div>
+  (hydrated at init in app.js).
+- UI font: Press Start 2P (--font-pixel) for titles/buttons/HUD;
+  Space Mono/Chakra Petch for body. All panels are square (no border-radius)
+  with hard offset shadows.

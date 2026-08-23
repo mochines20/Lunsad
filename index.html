@@ -6,7 +6,7 @@
 <title>LUNSAD — Launch Your Knowledge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -14,46 +14,8 @@
 <!-- ============ LANDING ============ -->
 <section id="screen-landing" class="screen active">
   <div class="landing-stars"></div>
-  <div class="landing-earth">
-    <svg viewBox="0 0 1000 300" preserveAspectRatio="xMidYMax slice">
-      <defs>
-        <linearGradient id="oceanGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#4a9be8"/>
-          <stop offset="0.35" stop-color="#2f7fd9"/>
-          <stop offset="0.7" stop-color="#1b4f9e"/>
-          <stop offset="1" stop-color="#0e2a5e"/>
-        </linearGradient>
-      </defs>
-      <!-- atmosphere glow rim -->
-      <path d="M-100 320 Q500 10 1100 320 L1100 300 L-100 300 Z" fill="rgba(150,210,255,0.3)"/>
-      <!-- ocean body: apex of horizon at center -->
-      <path d="M-100 320 Q500 30 1100 320 Z" fill="url(#oceanGrad)"/>
-      <!-- polar cap hugging the horizon apex -->
-      <ellipse cx="500" cy="76" rx="180" ry="16" fill="rgba(235,245,255,0.85)"/>
-      <!-- continents -->
-      <g fill="#3d9960">
-        <path d="M120 150 Q190 118 270 130 Q350 142 358 172 Q364 202 318 214 Q260 228 192 216 Q118 202 108 172 Q100 152 120 150 Z"/>
-        <path d="M580 190 Q660 162 745 174 Q830 186 836 216 Q840 244 786 254 Q712 266 638 250 Q566 234 562 210 Q558 194 580 190 Z"/>
-        <path d="M870 128 Q915 112 955 120 Q995 128 998 152 Q1000 176 958 184 Q912 192 878 178 Q846 164 848 144 Q850 132 870 128 Z"/>
-        <path d="M330 148 Q370 136 410 144 Q448 152 450 168 Q452 184 420 190 Q382 196 352 184 Q326 172 328 158 Q330 150 330 148 Z"/>
-      </g>
-      <!-- land shading -->
-      <g fill="rgba(20,60,40,0.28)">
-        <path d="M120 150 Q190 118 270 130 Q350 142 358 172 Q364 202 318 214 Q260 228 192 216 Q118 202 108 172 Q100 152 120 150 Z" transform="translate(5 7) scale(0.97)" transform-origin="230 175"/>
-        <path d="M580 190 Q660 162 745 174 Q830 186 836 216 Q840 244 786 254 Q712 266 638 250 Q566 234 562 210 Q558 194 580 190 Z" transform="translate(5 7) scale(0.97)" transform-origin="700 215"/>
-      </g>
-      <!-- cloud swirls -->
-      <g fill="rgba(255,255,255,0.55)">
-        <path d="M70 120 Q160 106 250 118 Q160 130 70 120 Z"/>
-        <path d="M620 130 Q720 116 820 130 Q720 144 620 130 Z"/>
-        <path d="M300 230 Q410 218 520 232 Q410 244 300 230 Z"/>
-        <path d="M830 100 Q890 92 950 100 Q890 110 830 100 Z"/>
-      </g>
-    </svg>
-  </div>
-  <div class="landing-ship" aria-hidden="true">
-    <svg viewBox="0 0 120 200" class="ship-svg"><use href="#ship-shape"/></svg>
-  </div>
+  <div class="landing-earth"><div data-px="earth"></div></div>
+  <div class="landing-ship" aria-hidden="true"><div data-px="shipSmoke" data-cls="ship-svg"></div></div>
   <div class="landing-content">
     <p class="landing-eyebrow">A KNOWLEDGE-POWERED SPACE ADVENTURE</p>
     <h1 class="landing-logo">LUNSAD</h1>
@@ -104,7 +66,7 @@
   </header>
   <div class="hangar-body">
     <div class="hangar-ship-wrap">
-      <svg viewBox="0 0 120 200" class="ship-svg ship-idle"><use href="#ship-shape"/></svg>
+      <div data-px="ship" data-cls="ship-svg ship-idle"></div>
       <div class="hangar-ship-name">LUNSAD-01</div>
       <div class="hangar-alt">CURRENT RECORD <b id="hangar-alt-num">0m</b></div>
     </div>
@@ -133,7 +95,7 @@
   <div id="ship-layer">
     <div id="ship" class="ship-fly">
       <div class="ship-flame"></div>
-      <svg viewBox="0 0 120 200" class="ship-svg"><use href="#ship-shape"/></svg>
+      <div data-px="ship" data-cls="ship-svg"></div>
       <div class="ship-shield-ring"></div>
     </div>
     <div id="thrust-readout"></div>
@@ -225,186 +187,6 @@
     </div>
   </div>
 </section>
-
-<!-- Shared vector asset library -->
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.5" stop-color="#dfe8f5"/>
-      <stop offset="1" stop-color="#a9bcd8"/>
-    </linearGradient>
-    <linearGradient id="noseGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#ff8299"/>
-      <stop offset="0.55" stop-color="#ff5c7a"/>
-      <stop offset="1" stop-color="#d13a58"/>
-    </linearGradient>
-    <linearGradient id="finGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ff8299"/>
-      <stop offset="1" stop-color="#c23150"/>
-    </linearGradient>
-    <radialGradient id="glassGrad" cx="0.36" cy="0.3" r="0.95">
-      <stop offset="0" stop-color="#cdf4ff"/>
-      <stop offset="0.5" stop-color="#46bcef"/>
-      <stop offset="1" stop-color="#0f5c9c"/>
-    </radialGradient>
-    <linearGradient id="leafGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#6fcf55"/>
-      <stop offset="1" stop-color="#2e7d3f"/>
-    </linearGradient>
-    <linearGradient id="cloudGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#cfdeef"/>
-    </linearGradient>
-    <radialGradient id="sunGrad" cx="0.38" cy="0.36" r="0.85">
-      <stop offset="0" stop-color="#fff7d6"/>
-      <stop offset="0.55" stop-color="#ffd166"/>
-      <stop offset="1" stop-color="#ff9a3d"/>
-    </radialGradient>
-    <radialGradient id="moonGrad" cx="0.36" cy="0.32" r="0.95">
-      <stop offset="0" stop-color="#fbfbf8"/>
-      <stop offset="0.6" stop-color="#cfcfc8"/>
-      <stop offset="1" stop-color="#8e8e88"/>
-    </radialGradient>
-    <linearGradient id="saturnGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffe3b0"/>
-      <stop offset="0.35" stop-color="#f2c078"/>
-      <stop offset="0.55" stop-color="#e0a25c"/>
-      <stop offset="0.7" stop-color="#c98a4a"/>
-      <stop offset="1" stop-color="#a06a38"/>
-    </linearGradient>
-    <radialGradient id="galaxyCore" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#fff8e0"/>
-      <stop offset="0.5" stop-color="rgba(255,220,170,0.6)"/>
-      <stop offset="1" stop-color="rgba(255,220,170,0)"/>
-    </radialGradient>
-
-    <!-- the LUNSAD-01 rocket -->
-    <g id="ship-shape">
-      <path d="M40 118 C26 140 16 162 14 190 L44 172 Z" fill="url(#finGrad)" stroke="#93263f" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M80 118 C94 140 104 162 106 190 L76 172 Z" fill="url(#finGrad)" stroke="#93263f" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M46 158 L74 158 L80 186 Q60 194 40 186 Z" fill="#46536f" stroke="#2c3750" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M60 4 C82 30 94 62 94 102 L94 148 Q94 160 82 160 L38 160 Q26 160 26 148 L26 102 C26 62 38 30 60 4 Z" fill="url(#bodyGrad)" stroke="#7d8cab" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M60 4 C73 18 83 34 88 50 L32 50 C37 34 47 18 60 4 Z" fill="url(#noseGrad)" stroke="#93263f" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M26 112 L94 112 L94 126 L26 126 Z" fill="#ff5c7a"/>
-      <path d="M26 126 L94 126 L94 130 L26 130 Z" fill="#c23150"/>
-      <circle cx="60" cy="84" r="21" fill="#8b99b5" stroke="#5c6a88" stroke-width="2"/>
-      <circle cx="60" cy="84" r="15" fill="url(#glassGrad)"/>
-      <ellipse cx="54" cy="78" rx="6" ry="4" fill="rgba(255,255,255,0.9)" transform="rotate(-25 54 78)"/>
-      <circle cx="36" cy="142" r="2.2" fill="#8b99b5"/>
-      <circle cx="84" cy="142" r="2.2" fill="#8b99b5"/>
-      <path d="M60 4 C82 30 94 62 94 102 L94 148 Q94 160 82 160 L60 160 Z" fill="rgba(15,25,55,0.12)"/>
-      <path d="M36 34 C31 52 29 72 29 98" stroke="rgba(255,255,255,0.6)" stroke-width="5" fill="none" stroke-linecap="round"/>
-    </g>
-
-    <!-- fluffy cloud -->
-    <g id="cloud-shape">
-      <ellipse cx="106" cy="84" rx="60" ry="12" fill="rgba(140,165,200,0.35)"/>
-      <ellipse cx="66" cy="66" rx="48" ry="26" fill="url(#cloudGrad)"/>
-      <ellipse cx="116" cy="48" rx="44" ry="32" fill="url(#cloudGrad)"/>
-      <ellipse cx="158" cy="68" rx="40" ry="22" fill="url(#cloudGrad)"/>
-      <ellipse cx="106" cy="74" rx="66" ry="20" fill="url(#cloudGrad)"/>
-    </g>
-
-    <!-- cartoony tree + bush -->
-    <g id="tree-shape">
-      <rect x="-7" y="8" width="14" height="52" rx="5" fill="#8a5a36"/>
-      <rect x="-7" y="8" width="7" height="52" rx="3.5" fill="#a06c42"/>
-      <circle cx="-22" cy="2" r="19" fill="url(#leafGrad)"/>
-      <circle cx="22" cy="2" r="19" fill="url(#leafGrad)"/>
-      <circle cx="0" cy="-14" r="28" fill="url(#leafGrad)"/>
-      <circle cx="-9" cy="-22" r="7" fill="rgba(255,255,255,0.25)"/>
-    </g>
-    <g id="bush-shape">
-      <circle cx="-14" cy="0" r="14" fill="url(#leafGrad)"/>
-      <circle cx="8" cy="-4" r="17" fill="url(#leafGrad)"/>
-      <circle cx="24" cy="2" r="11" fill="url(#leafGrad)"/>
-    </g>
-
-    <!-- launch gantry tower -->
-    <g id="gantry-shape">
-      <rect x="20" y="0" width="20" height="120" fill="none" stroke="#9aa7c2" stroke-width="4"/>
-      <path d="M20 20 L40 40 M40 20 L20 40 M20 60 L40 80 M40 60 L20 80 M20 100 L40 118" stroke="#ff5c7a" stroke-width="3"/>
-      <rect x="12" y="-8" width="36" height="10" rx="3" fill="#ffd166"/>
-    </g>
-
-    <!-- sun with rays -->
-    <g id="sun-shape">
-      <circle r="58" fill="none" stroke="#ffd166" stroke-width="7" stroke-dasharray="3 20" stroke-linecap="round" opacity="0.85"/>
-      <circle r="42" fill="url(#sunGrad)"/>
-    </g>
-
-    <!-- weather balloon -->
-    <g id="balloon-shape">
-      <path d="M0 -58 C20 -58 30 -44 30 -30 C30 -16 16 -6 6 -2 L-6 -2 C-16 -6 -30 -16 -30 -30 C-30 -44 -20 -58 0 -58 Z" fill="#ff5c7a" stroke="#c23150" stroke-width="2"/>
-      <path d="M0 -58 C8 -58 14 -46 14 -30 C14 -16 8 -6 4 -2 L-4 -2 C-8 -6 -14 -16 -14 -30 C-14 -46 -8 -58 0 -58 Z" fill="#ffffff" opacity="0.85"/>
-      <line x1="-4" y1="-2" x2="-8" y2="22" stroke="#9aa7c2" stroke-width="1.5"/>
-      <line x1="4" y1="-2" x2="8" y2="22" stroke="#9aa7c2" stroke-width="1.5"/>
-      <rect x="-11" y="22" width="22" height="16" rx="3" fill="#c99a5b" stroke="#8a5a36" stroke-width="2"/>
-    </g>
-
-    <!-- orbital satellite -->
-    <g id="sat-shape">
-      <rect x="-52" y="-9" width="34" height="18" rx="3" fill="#2f6fd0" stroke="#9fc2ff" stroke-width="1.5"/>
-      <line x1="-43" y1="-9" x2="-43" y2="9" stroke="#9fc2ff"/>
-      <line x1="-35" y1="-9" x2="-35" y2="9" stroke="#9fc2ff"/>
-      <line x1="-27" y1="-9" x2="-27" y2="9" stroke="#9fc2ff"/>
-      <rect x="18" y="-9" width="34" height="18" rx="3" fill="#2f6fd0" stroke="#9fc2ff" stroke-width="1.5"/>
-      <line x1="27" y1="-9" x2="27" y2="9" stroke="#9fc2ff"/>
-      <line x1="35" y1="-9" x2="35" y2="9" stroke="#9fc2ff"/>
-      <line x1="43" y1="-9" x2="43" y2="9" stroke="#9fc2ff"/>
-      <rect x="-16" y="-13" width="32" height="26" rx="6" fill="url(#bodyGrad)" stroke="#7d8cab" stroke-width="2"/>
-      <circle cx="0" cy="0" r="6" fill="#ffd166" stroke="#b8860b" stroke-width="1.5"/>
-      <line x1="0" y1="-13" x2="0" y2="-24" stroke="#9aa7c2" stroke-width="2"/>
-      <circle cx="0" cy="-26" r="3" fill="#ff5c7a"/>
-    </g>
-
-    <!-- cratered moon -->
-    <g id="moon-shape">
-      <circle cx="70" cy="70" r="64" fill="url(#moonGrad)"/>
-      <circle cx="48" cy="52" r="12" fill="#a9a9a2"/>
-      <circle cx="45" cy="49" r="10" fill="rgba(255,255,255,0.3)"/>
-      <circle cx="90" cy="82" r="9" fill="#a9a9a2"/>
-      <circle cx="88" cy="79" r="7" fill="rgba(255,255,255,0.3)"/>
-      <circle cx="62" cy="100" r="7" fill="#a9a9a2"/>
-      <circle cx="98" cy="44" r="6" fill="#a9a9a2"/>
-      <circle cx="36" cy="88" r="5" fill="#a9a9a2"/>
-      <path d="M70 6 A64 64 0 0 1 70 134 Z" fill="rgba(60,60,80,0.18)"/>
-    </g>
-
-    <!-- ringed gas giant -->
-    <g id="saturn-shape">
-      <g transform="rotate(-16)">
-        <ellipse rx="128" ry="36" fill="none" stroke="rgba(200,150,100,0.35)" stroke-width="26"/>
-        <ellipse rx="128" ry="36" fill="none" stroke="rgba(240,205,150,0.55)" stroke-width="14"/>
-      </g>
-      <circle r="58" fill="url(#saturnGrad)"/>
-      <path d="M-58 -16 Q0 -26 58 -16 L58 -6 Q0 -16 -58 -6 Z" fill="rgba(160,110,60,0.45)"/>
-      <path d="M-58 6 Q0 -2 58 6 L58 16 Q0 8 -58 16 Z" fill="rgba(255,235,200,0.35)"/>
-      <path d="M-58 30 Q0 22 58 30 L58 44 Q0 54 -58 44 Z" fill="rgba(120,75,40,0.4)"/>
-      <g transform="rotate(-16)">
-        <path d="M-128 0 A128 36 0 0 0 128 0" fill="none" stroke="rgba(255,222,165,0.85)" stroke-width="13"/>
-        <path d="M-128 0 A128 36 0 0 0 128 0" fill="none" stroke="rgba(190,140,90,0.4)" stroke-width="22"/>
-      </g>
-      <circle cx="-20" cy="-22" r="10" fill="rgba(255,255,255,0.25)"/>
-    </g>
-
-    <!-- spiral galaxy -->
-    <g id="galaxy-shape">
-      <g transform="rotate(-18)">
-        <ellipse rx="122" ry="40" fill="rgba(160,110,255,0.14)"/>
-        <ellipse rx="94" ry="30" fill="rgba(255,160,220,0.18)"/>
-        <ellipse rx="62" ry="20" fill="rgba(255,220,180,0.25)"/>
-      </g>
-      <circle r="22" fill="url(#galaxyCore)"/>
-      <circle cx="-70" cy="-18" r="2.5" fill="#fff"/>
-      <circle cx="82" cy="14" r="2" fill="#ffe6c4"/>
-      <circle cx="40" cy="-34" r="2" fill="#fff"/>
-      <circle cx="-46" cy="30" r="2" fill="#cfe4ff"/>
-      <circle cx="10" cy="40" r="1.6" fill="#fff"/>
-    </g>
-  </defs>
-</svg>
 
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>

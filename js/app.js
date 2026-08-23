@@ -79,49 +79,46 @@ function decorationsFor(id) {
     case 'earth':
       return `
         <div class="deco deco-ground"></div>
-        <div class="deco deco-hill h1"></div>
-        <div class="deco deco-hill h2"></div>
-        <svg class="deco tree" style="left:7%;bottom:24%;width:64px" viewBox="-45 -45 90 105"><use href="#tree-shape"/></svg>
-        <svg class="deco tree" style="left:20%;bottom:13%;width:44px" viewBox="-45 -45 90 105"><use href="#tree-shape"/></svg>
-        <svg class="deco tree" style="right:9%;bottom:22%;width:56px" viewBox="-45 -45 90 105"><use href="#tree-shape"/></svg>
-        <svg class="deco" style="right:22%;bottom:11%;width:52px" viewBox="-35 -25 70 40"><use href="#bush-shape"/></svg>
-        <svg class="deco" style="left:33%;bottom:7%;width:44px" viewBox="-35 -25 70 40"><use href="#bush-shape"/></svg>
+        <div class="deco" style="left:7%;bottom:26%;width:64px">${px(PXART.tree)}</div>
+        <div class="deco" style="left:20%;bottom:14%;width:44px">${px(PXART.tree)}</div>
+        <div class="deco" style="right:9%;bottom:24%;width:56px">${px(PXART.tree)}</div>
+        <div class="deco" style="right:22%;bottom:12%;width:52px">${px(PXART.bush)}</div>
+        <div class="deco" style="left:33%;bottom:8%;width:44px">${px(PXART.bush)}</div>
         <div class="deco deco-pad"></div>
-        <svg class="deco" style="left:calc(50% + 84px);bottom:5.5%;width:46px" viewBox="0 0 60 120"><use href="#gantry-shape"/></svg>
-        <svg class="deco deco-sun" viewBox="-75 -75 150 150"><use href="#sun-shape"/></svg>
-        <svg class="deco cloud" style="top:14%;left:9%;width:190px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
-        <svg class="deco cloud c2" style="top:30%;right:7%;width:130px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>`;
+        <div class="deco deco-sun" style="top:8%;right:10%;width:110px">${px(PXART.sun)}</div>
+        <div class="deco cloud" style="top:16%;left:9%;width:170px">${px(PXART.cloud)}</div>
+        <div class="deco cloud c2" style="top:32%;right:7%;width:120px">${px(PXART.cloud)}</div>`;
     case 'clouds':
       return `
-        <svg class="deco cloud" style="top:10%;left:6%;width:210px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
-        <svg class="deco cloud c2" style="top:34%;right:5%;width:260px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
-        <svg class="deco cloud c3" style="top:58%;left:18%;width:170px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
-        <svg class="deco cloud" style="top:78%;right:20%;width:200px" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>`;
+        <div class="deco cloud" style="top:10%;left:6%;width:190px">${px(PXART.cloud)}</div>
+        <div class="deco cloud c2" style="top:34%;right:5%;width:230px">${px(PXART.cloud)}</div>
+        <div class="deco cloud c3" style="top:58%;left:18%;width:150px">${px(PXART.cloud)}</div>
+        <div class="deco cloud" style="top:78%;right:20%;width:180px">${px(PXART.cloud)}</div>`;
     case 'atmosphere':
       return `
-        <svg class="deco cloud" style="top:66%;left:8%;width:180px;opacity:0.55" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
-        <svg class="deco cloud c2" style="top:80%;right:10%;width:140px;opacity:0.45" viewBox="0 0 220 100"><use href="#cloud-shape"/></svg>
+        <div class="deco cloud" style="top:66%;left:8%;width:160px;opacity:0.55">${px(PXART.cloud)}</div>
+        <div class="deco cloud c2" style="top:80%;right:10%;width:130px;opacity:0.45">${px(PXART.cloud)}</div>
         ${starField(10)}`;
     case 'stratosphere':
       return `
-        <svg class="deco float-slow" style="top:16%;left:14%;width:72px" viewBox="-32 -62 64 104"><use href="#balloon-shape"/></svg>
+        <div class="deco float-slow" style="top:16%;left:14%;width:64px">${px(PXART.balloon)}</div>
         ${starField(26)}`;
     case 'orbit':
       return `
-        <svg class="deco float-slow" style="top:20%;left:13%;width:120px" viewBox="-55 -30 110 60"><use href="#sat-shape"/></svg>
-        <svg class="deco float-slow" style="top:58%;right:10%;width:80px;opacity:0.75" viewBox="-55 -30 110 60"><use href="#sat-shape"/></svg>
+        <div class="deco float-slow" style="top:20%;left:13%;width:110px">${px(PXART.satellite)}</div>
+        <div class="deco float-slow" style="top:58%;right:10%;width:74px;opacity:0.75">${px(PXART.satellite)}</div>
         ${starField(46)}`;
     case 'moon':
       return `
-        <svg class="deco deco-moon-svg" viewBox="0 0 140 140"><use href="#moon-shape"/></svg>
+        <div class="deco deco-moon-svg" style="top:14%;left:10%;width:120px">${px(PXART.moon)}</div>
         ${starField(56)}`;
     case 'deepspace':
       return `
-        <svg class="deco deco-saturn-svg float-slow" viewBox="-140 -75 280 150"><use href="#saturn-shape"/></svg>
+        <div class="deco deco-saturn-svg float-slow" style="top:18%;right:6%;width:230px">${px(PXART.saturn)}</div>
         ${starField(70)}`;
     case 'galaxy':
       return `
-        <svg class="deco deco-galaxy-svg" viewBox="-130 -130 260 260"><use href="#galaxy-shape"/></svg>
+        <div class="deco deco-galaxy-svg" style="top:12%;left:50%;width:240px;margin-left:-120px">${px(PXART.galaxy)}</div>
         ${starField(90)}`;
     default: return '';
   }
@@ -611,6 +608,7 @@ $('#btn-abandon').onclick = () => { clearInterval(G.timer); G.active = false; $(
 $$('.boost-btn').forEach(b => b.onclick = () => useBoost(b.dataset.boost));
 
 /* init */
+$$('[data-px]').forEach(el => { el.innerHTML = px(PXART[el.dataset.px], el.dataset.cls || ''); });
 buildWorld();
 requestAnimationFrame(cameraLoop);
 show('#screen-landing');
