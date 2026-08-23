@@ -1035,7 +1035,7 @@ kbd {
 }
 .opt-key { flex: 0 0 auto; color: var(--cyan); }
 .q-opt.key-press { transform: translateY(3px) !important; box-shadow: 0 1px 0 rgba(0,0,0,0.4) !important; }
-.boost-btn kbd { position: absolute; right: 4px; bottom: 4px; font-size: 7px; padding: 2px 4px; opacity: 0.6; }
+.boost-btn kbd { position: absolute; left: 4px; top: 4px; font-size: 7px; padding: 2px 4px; opacity: 0.55; }
 .boost-btn { position: relative; }
 .boost-btn .px-slot { width: 22px; display: flex; margin: 0 auto 5px; }
 .boost-btn .boost-name { display: block; }
@@ -1109,6 +1109,7 @@ kbd {
   animation: pxBlink 0.7s steps(1) infinite;
 }
 .results-grade {
+  margin: 18px auto 22px;
   width: 92px; height: 92px;
   display: flex; align-items: center; justify-content: center;
   border: 4px solid var(--gold);
@@ -1136,3 +1137,130 @@ kbd {
   50% { transform: translateX(5px); }
   75% { transform: translateX(-3px); }
 }
+
+
+/* ============================================================
+   CLEAN DESIGN PASS — clarity, hierarchy, cohesion
+   ============================================================ */
+
+/* ---------- universal pixel UI language ---------- */
+/* hard offset shadows, zero soft blur on interactive surfaces */
+.btn, .mode-card, .stat-chip, .chip-btn, .q-opt, .boost-btn, .panel {
+  border-radius: 0;
+}
+
+/* ---------- landing: calmer, centered composition ---------- */
+.landing-content { gap: 0; }
+.landing-eyebrow { letter-spacing: 4px; opacity: 0.9; }
+.landing-sub { line-height: 1.8; margin-bottom: 26px; }
+.landing-actions { margin-bottom: 34px; }
+.auth-label { letter-spacing: 4px; margin-bottom: 10px; }
+.auth-buttons { gap: 10px; }
+.btn-auth { min-width: 116px; padding: 12px 18px; }
+.btn-auth .px-slot { width: 12px; vertical-align: -1px; filter: brightness(0) invert(1); opacity: 0.85; }
+.btn-help {
+  margin-top: 26px;
+  margin-bottom: 34px;
+  position: relative;
+  z-index: 3;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 10px 16px;
+  opacity: 0.75;
+}
+.btn-help:hover { opacity: 1; }
+
+/* ---------- help overlay ---------- */
+.help-panel {
+  width: min(560px, 92vw);
+  padding: 34px 34px 28px;
+  text-align: left;
+}
+.help-panel .panel-title { text-align: center; margin-bottom: 22px; }
+.help-list { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 16px; }
+.help-list li { display: flex; align-items: flex-start; gap: 14px; }
+.help-list .px-slot { width: 26px; flex: 0 0 26px; margin-top: 2px; }
+.help-list kbd { flex: 0 0 auto; margin-top: 2px; font-size: 9px; padding: 5px 8px; }
+.help-list b {
+  display: block;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--gold);
+  margin-bottom: 5px;
+}
+.help-list em {
+  display: block;
+  font-style: normal;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+#btn-help-close { display: block; margin: 0 auto; }
+
+/* ---------- hangar: tighter top bar, clearer chips ---------- */
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  background: rgba(13, 18, 42, 0.85);
+  border: 2px solid var(--panel-edge);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+}
+.stat-chip .px-slot { width: 13px; }
+.chip-btn {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--ink-dim);
+  background: rgba(13, 18, 42, 0.85);
+  border: 2px solid var(--panel-edge);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+  width: 36px; height: 36px;
+  cursor: pointer;
+}
+.chip-btn:hover { color: var(--gold); border-color: var(--gold); }
+.hangar-ship-wrap { margin-bottom: 8px; }
+.hangar-ship-name { letter-spacing: 6px; }
+.hangar-alt { letter-spacing: 3px; }
+.hangar-alt b { font-variant-numeric: tabular-nums; }
+.mode-card em { letter-spacing: 0.5px; }
+
+/* ---------- question card: clearer reading hierarchy ---------- */
+#question-panel { box-shadow: 0 0 0 3px rgba(0,0,0,0.45), 12px 12px 0 rgba(0,0,0,0.4); }
+#q-text { line-height: 1.5; letter-spacing: 0.2px; }
+.q-opt { letter-spacing: 0.2px; }
+.q-opt span { flex: 1; }
+kbd { font-family: var(--font-pixel); }
+
+/* ---------- boost bar: consistent tiles ---------- */
+.boost-btn { box-shadow: 4px 4px 0 rgba(0,0,0,0.45); }
+.boost-btn:disabled { opacity: 0.35; }
+
+/* ---------- quit button: square icon tile ---------- */
+#btn-abandon {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;
+  background: rgba(13, 18, 42, 0.85);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.45);
+}
+#btn-abandon .px-slot { width: 18px; filter: brightness(0) invert(1); opacity: 0.9; }
+#btn-abandon:hover .px-slot { filter: none; }
+
+/* ---------- results: cleaner stack ---------- */
+.results-panel { box-shadow: 0 0 0 3px rgba(0,0,0,0.45), 14px 14px 0 rgba(0,0,0,0.4); }
+.results-actions .btn .px-slot { width: 14px; }
+.btn-ghost .px-slot { filter: brightness(0) invert(1); opacity: 0.85; }
+
+/* ---------- primary buttons: icon contrast ---------- */
+.btn-primary .px-slot { filter: brightness(0); opacity: 0.85; }
+
+/* ---------- kbd consistency ---------- */
+kbd {
+  border-width: 2px;
+  border-style: solid;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.results-eyebrow-fail { color: var(--red) !important; text-shadow: 0 0 16px rgba(255,92,122,0.5); }

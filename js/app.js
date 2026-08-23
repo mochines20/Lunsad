@@ -545,6 +545,7 @@ function endMission(completed) {
   saveProfile();
 
   $('#results-eyebrow').textContent = completed ? 'MISSION COMPLETE' : 'MISSION FAILED';
+  $('#results-eyebrow').classList.toggle('results-eyebrow-fail', !completed);
   $('#results-title').textContent = completed
     ? `YOU REACHED ${zone.name}`
     : 'YOUR SHIP RAN OUT OF ENERGY';
@@ -621,6 +622,9 @@ $('#btn-play').onclick = () => { sfx.click(); startMission(); };
 $('#mode-solo').onclick = () => { sfx.click(); startMission(); };
 $('#mode-map').onclick = () => { sfx.click(); openMap(); };
 $('#btn-map-close').onclick = () => $('#modal-map').classList.add('hidden');
+$('#btn-help-landing').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
+$('#btn-help-hangar').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
+$('#btn-help-close').onclick = () => { sfx.click(); $('#modal-help').classList.add('hidden'); };
 $('#btn-again').onclick = () => { sfx.click(); startMission(); };
 $('#btn-hangar').onclick = () => { sfx.click(); goHangar(); };
 $('#btn-abandon').onclick = () => { clearInterval(G.timer); G.active = false; $('#vignette').classList.remove('danger'); goHangar(); };
@@ -633,6 +637,13 @@ document.addEventListener('keydown', e => {
   if (tag === 'INPUT' || tag === 'TEXTAREA') return;
   const k = e.key.toLowerCase();
   const screen = ($('.screen.active') || {}).id;
+
+  if (k === 'escape' && !$('#modal-help').classList.contains('hidden')) {
+    $('#modal-help').classList.add('hidden'); return;
+  }
+  if (k === 'escape' && !$('#modal-map').classList.contains('hidden')) {
+    $('#modal-map').classList.add('hidden'); return;
+  }
 
   if (screen === 'screen-game') {
     if (['1', '2', '3', '4'].includes(k)) {

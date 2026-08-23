@@ -202,11 +202,11 @@ const SHIP_BODY = [
   "....KWKDDDDDDKWK....",
   "....KWWWKKKKWWWK....",
   ".KBBKWWWWWWWWWWKBBK.",
-  ".KBBKWWWWRRWWWWKBBK.",
-  ".KBBKWWWRRWWWWKBBK.",
-  ".KBBbWWWWRRWWWKbbK.",
-  ".KbbKWWWWWRRWWKbbK.",
-  ".KbbKWWWWWWWWWKbbK.",
+  ".KBBKWWWWWWWWWWKBBK.",
+  ".KBBKWWKKKKKKWWKBBK.",
+  ".KBBbWWKKKKKKWWKbbK.",
+  ".KbbKWWWWWWWWWWKbbK.",
+  ".KbbKWWWWWWWWWWKbbK.",
   ".KbbKWWKKKKKWWKbbK.",
   "..KK.KKKKKKKKK.KK.."
 ];
@@ -428,6 +428,34 @@ const PXICON = {
     "..KBBBK..",
     "...KBK...",
     "....K...."
+  ]},
+  home: { w: 9, rows: [
+    "....K....",
+    "...KWK...",
+    "..KWWWK..",
+    ".KWWWWWK.",
+    "KWWWWWWWK",
+    ".KWKKKWK.",
+    ".KWKDKWK.",
+    ".KWKDKWK.",
+    ".KKKKKKK."
+  ]},
+  mail: { w: 9, rows: [
+    "KKKKKKKKK",
+    "KWWWWWWWK",
+    "KWKWWKWWK",
+    "KWWKKKWWK",
+    "KWWWWWWWK",
+    "KWWWWWWWK",
+    "KKKKKKKKK"
+  ]},
+  skip: { w: 9, rows: [
+    "W..W...",
+    "WW.WW..",
+    "WWWWWW.",
+    "WWWWWW.",
+    "WW.WW..",
+    "W..W..."
   ]},
   warp: { w: 9, rows: [
     ".G...G...",

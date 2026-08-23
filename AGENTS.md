@@ -53,3 +53,15 @@ python3 -m http.server 12000   # serves index.html; previews on the work-1 host
 - NEW RECORD blink tag on results (isRecord = finalAlt > prev bestAlt).
 - CRT stepped screen transitions (crtIn), stepped zone banner, attract-mode
   blinking START button, red blinking low-timer bar, wrong-answer shake.
+
+## Clean Design Pass (clarity/cohesion)
+- HOW TO PLAY overlay (#modal-help): icon+text list of rules, opens from
+  landing (? HOW TO PLAY) and hangar (chip-btn ?), Esc closes.
+- New PXICON entries: home, mail, skip. Ship sprite bolt removed (clean
+  white body + dark window stripe) for small-size readability.
+- Quit button is now a home pixel icon; results HANGAR has home icon.
+- Icon contrast rules: .btn-primary icons = black silhouette
+  (filter: brightness(0)), ghost/dark surfaces = white (invert(1)).
+- Boost kbd badges sit top-left (count badge top-right, name bottom).
+- Results: grade centered, MISSION FAILED eyebrow turns red
+  (.results-eyebrow-fail).

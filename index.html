@@ -28,12 +28,28 @@
       <p class="auth-label">CONTINUE WITH</p>
       <div class="auth-buttons">
         <button class="btn btn-auth" data-auth="google">Google</button>
-        <button class="btn btn-auth" data-auth="apple"><span class="emoji"></span> Apple</button>
-        <button class="btn btn-auth" data-auth="email"><span class="emoji">✉️</span> Email</button>
+        <button class="btn btn-auth" data-auth="apple">Apple</button>
+        <button class="btn btn-auth" data-auth="email"><span class="px-slot" data-icn="mail"></span> Email</button>
       </div>
     </div>
+    <button class="btn btn-ghost btn-help" id="btn-help-landing">? HOW TO PLAY</button>
   </div>
 </section>
+
+<!-- ============ HELP / HOW TO PLAY ============ -->
+<div id="modal-help" class="modal hidden">
+  <div class="panel help-panel">
+    <h2 class="panel-title">HOW TO PLAY</h2>
+    <ul class="help-list">
+      <li><span class="px-slot" data-icn="bolt"></span><div><b>ANSWER TO CLIMB</b><em>Every correct answer fires your thrusters. Harder questions give more altitude.</em></div></li>
+      <li><span class="px-slot" data-icn="heart"></span><div><b>DON'T FLAME OUT</b><em>Wrong answers cost altitude and 1 energy. Lose all 3 and the mission fails.</em></div></li>
+      <li><span class="px-slot" data-icn="radar"></span><div><b>USE BOOSTS WISELY</b><em>Radar removes a wrong option, Scan shows a clue, Boost doubles thrust, Shield blocks damage, Warp skips a question.</em></div></li>
+      <li><span class="px-slot" data-icn="dust"></span><div><b>EARN STARDUST</b><em>Correct answers, streaks, and completed missions earn Stardust for your profile.</em></div></li>
+      <li><kbd>1-4</kbd><div><b>KEYBOARD</b><em>Answer with 1-4, boosts with R S B H W, Esc to quit, Enter to start.</em></div></li>
+    </ul>
+    <button class="btn btn-primary" id="btn-help-close">GOT IT</button>
+  </div>
+</div>
 
 <!-- ============ PILOT SETUP (mock auth) ============ -->
 <section id="screen-onboard" class="screen">
@@ -62,6 +78,7 @@
       <span class="stat-chip" title="Stardust"><span class="px-slot" data-icn="dust"></span> <b id="hangar-dust">0</b></span>
       <span class="stat-chip" title="Best altitude"><span class="px-slot" data-icn="radar"></span> <b id="hangar-best">0m</b></span>
       <span class="stat-chip pilot-chip"><span id="hangar-avatar">👨‍🚀</span> <b id="hangar-name">Pilot</b></span>
+      <button class="chip-btn" id="btn-help-hangar" title="How to play">?</button>
     </div>
   </header>
   <div class="hangar-body">
@@ -156,7 +173,7 @@
     <button class="boost-btn" data-boost="warp" title="Warp — skip question, -300m [W]"><span class="px-slot" data-icn="warp"></span><span class="boost-name">WARP</span><i class="boost-count"></i><kbd>W</kbd></button>
   </footer>
 
-  <button id="btn-abandon" title="Abort mission">✕</button>
+  <button id="btn-abandon" title="Back to hangar [Esc]"><span class="px-slot" data-icn="home"></span></button>
 </section>
 
 <!-- ============ FLIGHT MAP MODAL ============ -->
@@ -184,7 +201,7 @@
     </div>
     <div class="results-actions">
       <button class="btn btn-primary" id="btn-again"><span class="px-slot" data-icn="rocket"></span> FLY AGAIN</button>
-      <button class="btn btn-ghost" id="btn-hangar">HANGAR</button>
+      <button class="btn btn-ghost" id="btn-hangar"><span class="px-slot" data-icn="home"></span> HANGAR</button>
     </div>
   </div>
 </section>
