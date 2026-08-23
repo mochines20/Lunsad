@@ -88,6 +88,11 @@
     <div id="world-inner"><!-- zones injected by JS --></div>
   </div>
 
+  <!-- slow parallax star layer + speed streaks -->
+  <div id="para-stars"></div>
+  <div id="speedlines"></div>
+  <div id="vignette"></div>
+
   <!-- The ship: fixed in view, world moves around it -->
   <div id="ship-layer">
     <div id="ship" class="ship-fly">
@@ -96,7 +101,17 @@
       <div class="ship-shield-ring"></div>
     </div>
     <div id="thrust-readout"></div>
+    <div id="particle-layer"></div>
   </div>
+
+  <!-- zone crossing banner -->
+  <div id="zone-banner-flash"><em>ENTERING</em><b id="zbf-name"></b></div>
+
+  <!-- launch countdown -->
+  <div id="countdown" class="hidden"></div>
+
+  <!-- altimeter tape -->
+  <aside id="altimeter"><div id="alt-ticks"></div><div id="alt-marker">▲</div></aside>
 
   <!-- HUD -->
   <header id="hud">

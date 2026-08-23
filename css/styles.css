@@ -275,9 +275,7 @@ button { font-family: inherit; cursor: pointer; }
 #world-inner {
   position: absolute; left: 0; right: 0; bottom: 0;
   will-change: transform;
-  transition: transform 1.4s cubic-bezier(0.22, 0.9, 0.28, 1);
 }
-#world-inner.snap { transition: none; }
 
 .zone { position: absolute; left: 0; right: 0; overflow: hidden; }
 .zone-banner {
@@ -454,7 +452,8 @@ button { font-family: inherit; cursor: pointer; }
 .hud-dust { font-size: 14px; color: var(--gold); }
 .hud-center { text-align: center; }
 #hud-zone { font-size: 11px; letter-spacing: 5px; color: var(--cyan); }
-#hud-alt { font-size: 22px; font-weight: 700; color: var(--ink); }
+#hud-alt { font-size: 22px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hud-dust, .hud-energy, #hud-q { font-variant-numeric: tabular-nums; }
 .hud-streak { font-size: 13px; color: var(--amber); font-weight: 700; letter-spacing: 1px; }
 #hud-q { font-size: 13px; color: var(--ink-dim); }
 
@@ -648,4 +647,240 @@ button { font-family: inherit; cursor: pointer; }
   .hud-left, .hud-right { min-width: 0; }
   #hud-alt { font-size: 17px; }
   .results-grid { grid-template-columns: 1fr 1fr; }
+  #altimeter { right: 6px; height: 44vh; }
+}
+
+/* ============================================================
+   INSTRUMENT LAYER — grain, scanlines, parallax, speedlines
+   ============================================================ */
+
+/* film grain over everything: keeps flat gradients from feeling sterile */
+body::after {
+  content: '';
+  position: fixed; inset: -50%;
+  z-index: 200;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity: 0.045;
+  animation: grainShift 0.9s steps(4) infinite;
+}
+@keyframes grainShift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 1.5%); }
+  50% { transform: translate(1.5%, -2%); }
+  75% { transform: translate(-1%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* faint CRT scanlines only inside the game screen */
+#screen-game::after {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 3px);
+  mix-blend-mode: overlay;
+}
+
+/* slow parallax stars behind the ship, above the zone skies */
+#para-stars {
+  position: absolute; inset: -300% 0;
+  z-index: 2;
+  pointer-events: none;
+  will-change: transform;
+  background-size: 100% 720px;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 12%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 18% 44%, #cfe4ff 50%, transparent 51%),
+    radial-gradient(2px 2px at 27% 78%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 36% 25%, #ffe6c4 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 47% 58%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 58% 8%, #cfe4ff 50%, transparent 51%),
+    radial-gradient(2px 2px at 66% 36%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 74% 68%, #fff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 83% 20%, #ffe6c4 50%, transparent 51%),
+    radial-gradient(1px 1px at 91% 52%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 96% 88%, #cfe4ff 50%, transparent 51%),
+    radial-gradient(1px 1px at 13% 92%, #fff 50%, transparent 51%);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+#para-stars.on { opacity: 0.9; }
+
+/* speed streaks while the camera has velocity */
+#speedlines {
+  position: absolute; inset: -20% 0;
+  z-index: 3;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg,
+    transparent 0 90px,
+    rgba(190, 225, 255, 0.16) 90px 92px,
+    transparent 92px 210px,
+    rgba(190, 225, 255, 0.09) 210px 211px,
+    transparent 211px 340px);
+  opacity: 0;
+  animation: streakDown 0.5s linear infinite;
+}
+#speedlines.falling { animation-name: streakUp; }
+@keyframes streakDown { from { background-position: 0 0; } to { background-position: 0 340px; } }
+@keyframes streakUp { from { background-position: 0 340px; } to { background-position: 0 0; } }
+
+/* red pulse at 1 energy */
+#vignette {
+  position: absolute; inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: inset 0 0 120px rgba(255, 60, 90, 0.55);
+  transition: opacity 0.6s ease;
+}
+#vignette.danger { opacity: 1; animation: dangerPulse 1.1s ease-in-out infinite; }
+@keyframes dangerPulse { 50% { opacity: 0.35; } }
+
+/* ---------------- particles ---------------- */
+#particle-layer { position: absolute; inset: 0; overflow: visible; }
+.p {
+  position: absolute;
+  left: 50%; top: 62%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.p-dust {
+  width: 5px; height: 5px;
+  background: var(--gold);
+  box-shadow: 0 0 8px 2px rgba(255, 209, 102, 0.7);
+  animation: dustRise 1.4s ease-out both;
+}
+@keyframes dustRise {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), -180px) scale(0.3); }
+}
+.p-smoke {
+  width: 9px; height: 9px;
+  background: rgba(140, 145, 160, 0.75);
+  filter: blur(2px);
+  animation: smokeFall 1.3s ease-in both;
+}
+@keyframes smokeFall {
+  0% { opacity: 0.9; transform: translate(0, 0) scale(0.6); }
+  100% { opacity: 0; transform: translate(var(--dx), 150px) scale(1.8); }
+}
+
+/* ---------------- zone crossing banner ---------------- */
+#zone-banner-flash {
+  position: absolute;
+  top: 34%; left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+}
+#zone-banner-flash em {
+  display: block;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 11px; letter-spacing: 6px;
+  color: var(--cyan);
+}
+#zone-banner-flash b {
+  font-size: clamp(30px, 6vw, 52px);
+  letter-spacing: 8px;
+  color: var(--ink);
+  text-shadow: 0 0 34px rgba(47, 214, 255, 0.55);
+}
+#zone-banner-flash.show { animation: zoneFlash 2s ease both; }
+@keyframes zoneFlash {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.85); letter-spacing: 18px; }
+  15% { opacity: 1; transform: translateX(-50%) scale(1); }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) scale(1.04); }
+}
+
+/* ---------------- launch countdown ---------------- */
+#countdown {
+  position: absolute; inset: 0;
+  z-index: 20;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+#countdown span {
+  font-size: clamp(80px, 18vw, 170px);
+  font-weight: 700;
+  color: var(--amber);
+  text-shadow: 0 0 70px rgba(255, 150, 60, 0.6);
+  animation: countPop 0.9s ease both;
+}
+#countdown span.go { color: var(--green); font-size: clamp(48px, 10vw, 96px); letter-spacing: 8px; text-shadow: 0 0 70px rgba(82,255,168,0.6); }
+@keyframes countPop {
+  0% { opacity: 0; transform: scale(1.6); }
+  25% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: scale(0.92); }
+}
+
+/* ---------------- altimeter tape ---------------- */
+#altimeter {
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  height: 56vh;
+  width: 44px;
+  z-index: 10;
+  border-left: 1px solid rgba(120, 150, 220, 0.3);
+  pointer-events: none;
+}
+.alt-tick {
+  position: absolute; left: 0;
+  width: 10px; height: 1px;
+  background: rgba(120, 150, 220, 0.45);
+}
+.alt-tick.zone-tick { width: 18px; background: var(--cyan); box-shadow: 0 0 6px rgba(47,214,255,0.5); }
+.alt-tick em {
+  position: absolute; right: 24px; top: -6px;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 8px; letter-spacing: 1px;
+  color: rgba(154, 167, 194, 0.75);
+  white-space: nowrap;
+  text-align: right;
+}
+#alt-marker {
+  position: absolute; left: -7px;
+  color: var(--amber);
+  font-size: 13px;
+  text-shadow: 0 0 10px rgba(255, 180, 94, 0.8);
+  transition: none;
+  will-change: bottom;
+}
+
+/* ---------------- ship idle sway ---------------- */
+#ship .ship-svg { animation: sway 3.2s ease-in-out infinite; }
+@keyframes sway {
+  0%, 100% { transform: rotate(-2.4deg); }
+  50% { transform: rotate(2.4deg); }
+}
+#ship.thrusting .ship-svg { animation: none; transform: rotate(0deg); }
+
+/* ---------------- staggered option entrance ---------------- */
+.q-opt { animation: optIn 0.3s ease both; }
+.q-opt:nth-child(1) { animation-delay: 0.03s; }
+.q-opt:nth-child(2) { animation-delay: 0.09s; }
+.q-opt:nth-child(3) { animation-delay: 0.15s; }
+.q-opt:nth-child(4) { animation-delay: 0.21s; }
+@keyframes optIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ---------------- HUD chip frames ---------------- */
+.hud-left, .hud-right {
+  background: rgba(8, 12, 30, 0.55);
+  border: 1px solid rgba(120, 150, 220, 0.22);
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+.hud-center {
+  background: rgba(8, 12, 30, 0.55);
+  border: 1px solid rgba(120, 150, 220, 0.22);
+  border-radius: 10px;
+  padding: 5px 22px;
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%);
 }

@@ -71,6 +71,7 @@ function buildWorld() {
       ${decorationsFor(zone.id)}`;
     worldInner.appendChild(el);
   });
+  buildAltimeter();
 }
 
 function decorationsFor(id) {
@@ -140,17 +141,64 @@ function zoneAt(alt) {
   return ZONES[0];
 }
 
+/* ---------------- momentum camera ----------------
+   setAltitude only sets a target; a rAF loop eases the camera
+   toward it so climbs/falls feel physical, and drives every
+   velocity-linked effect (counter, streaks, parallax, tape). */
+const cam = { pos: 0, target: 0 };
+let lastZone = null;
+
 function setAltitude(a, snap = false) {
   G.altitude = Math.max(0, Math.min(a, WORLD_TOP - window.innerHeight * 0.5));
-  worldInner.classList.toggle('snap', snap);
-  worldInner.style.transform = `translateY(${G.altitude}px)`;
-  if (snap) requestAnimationFrame(() => worldInner.classList.remove('snap'));
-  const zone = zoneAt(G.altitude);
-  if (zone !== G.currentZone) {
+  cam.target = G.altitude;
+  if (snap) cam.pos = cam.target;
+}
+
+function cameraLoop() {
+  const diff = cam.target - cam.pos;
+  cam.pos += diff * 0.085;
+  if (Math.abs(diff) < 0.4) cam.pos = cam.target;
+
+  worldInner.style.transform = `translateY(${cam.pos}px)`;
+  $('#hud-alt').textContent = fmtAlt(cam.pos);
+  $('#alt-marker').style.bottom = `calc(${(cam.pos / WORLD_TOP) * 100}% - 7px)`;
+
+  const stars = $('#para-stars');
+  stars.style.transform = `translateY(${cam.pos * 0.32}px)`;
+  stars.classList.toggle('on', cam.pos > ZONES[2].alt);
+
+  const lines = $('#speedlines');
+  lines.style.opacity = Math.min(0.85, Math.abs(diff) / 900);
+  lines.classList.toggle('falling', diff < -1);
+
+  const zone = zoneAt(cam.pos);
+  if (zone !== lastZone) {
+    lastZone = zone;
     G.currentZone = zone;
     $('#hud-zone').textContent = zone.name;
+    if (G.active && cam.pos > 100) zoneBanner(zone);
   }
-  $('#hud-alt').textContent = fmtAlt(G.altitude);
+  requestAnimationFrame(cameraLoop);
+}
+
+function zoneBanner(zone) {
+  const el = $('#zone-banner-flash');
+  $('#zbf-name').textContent = zone.icon + ' ' + zone.name;
+  el.classList.remove('show');
+  void el.offsetWidth;
+  el.classList.add('show');
+}
+
+function buildAltimeter() {
+  const ticks = $('#alt-ticks');
+  ticks.innerHTML = '';
+  ZONES.forEach(zone => {
+    const t = document.createElement('div');
+    t.className = 'alt-tick zone-tick';
+    t.style.bottom = (zone.alt / WORLD_TOP) * 100 + '%';
+    t.innerHTML = `<em>${zone.label.toUpperCase()}</em>`;
+    ticks.appendChild(t);
+  });
 }
 
 function fmtAlt(a) { return Math.round(a).toLocaleString('en-US') + 'm'; }
@@ -173,7 +221,8 @@ function startMission() {
   });
   buildWorld();
   show('#screen-game');
-  $('#hud-zone').textContent = 'EARTH';
+  $('#vignette').classList.remove('danger');
+  lastZone = ZONES[0];
   $('#hud-energy').textContent = '❤️'.repeat(G.energy);
   $('#hud-streak').textContent = '';
   $('#ship').className = 'ship-fly';
@@ -182,15 +231,44 @@ function startMission() {
   $('#question-panel').classList.add('hidden');
   $('#fact-toast').classList.add('hidden');
 
-  // launch sequence
-  readout('🚀 LUNSAD!', 'good');
-  sfx.launch();
-  $('#ship').classList.add('thrusting');
-  setAltitude(260);
-  setTimeout(() => {
-    $('#ship').classList.remove('thrusting');
-    nextQuestion();
-  }, 1900);
+  runCountdown(() => {
+    readout('🚀 LIFTOFF', 'good');
+    sfx.launch();
+    $('#ship').classList.add('thrusting');
+    setAltitude(260);
+    setTimeout(() => {
+      $('#ship').classList.remove('thrusting');
+      nextQuestion();
+    }, 1900);
+  });
+}
+
+function runCountdown(done) {
+  const cd = $('#countdown');
+  cd.classList.remove('hidden');
+  const steps = ['3', '2', '1', 'LUNSAD!'];
+  steps.forEach((s, i) => {
+    setTimeout(() => {
+      cd.innerHTML = `<span class="${s === 'LUNSAD!' ? 'go' : ''}">${s}</span>`;
+      beep(s === 'LUNSAD!' ? 880 : 440, 0.12, 'square', 0.06);
+      if (i === steps.length - 1) {
+        setTimeout(() => { cd.classList.add('hidden'); cd.innerHTML = ''; done(); }, 900);
+      }
+    }, i * 750);
+  });
+}
+
+function spawnParticles(kind, count) {
+  const layer = $('#particle-layer');
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'p ' + kind;
+    p.style.setProperty('--dx', (Math.random() * 160 - 80).toFixed(0) + 'px');
+    p.style.left = `calc(50% + ${(Math.random() * 44 - 22).toFixed(0)}px)`;
+    p.style.animationDelay = (Math.random() * 0.25).toFixed(2) + 's';
+    layer.appendChild(p);
+    setTimeout(() => p.remove(), 1800);
+  }
 }
 
 /* ---------------- question flow ---------------- */
@@ -279,6 +357,7 @@ function onCorrect(q) {
 
   sfx.correct(); sfx.thrust();
   flash('good');
+  spawnParticles('p-dust', 14);
   readout(`⚡ THRUST +${gain.toLocaleString()}m`, 'good');
   $('#ship').classList.add('thrusting');
   $('#ship').classList.toggle('overdrive', G.streak >= 5);
@@ -297,6 +376,7 @@ function onWrong(q, timedOut) {
   $('#ship').classList.remove('overdrive');
   G.energy--;
   $('#hud-energy').textContent = '❤️'.repeat(Math.max(0, G.energy)) + '🖤'.repeat(Math.max(0, TUNING.startEnergy - G.energy));
+  $('#vignette').classList.toggle('danger', G.energy === 1);
 
   let drop = TUNING.wrongDrop;
   let blocked = false;
@@ -305,6 +385,7 @@ function onWrong(q, timedOut) {
 
   sfx.wrong();
   flash('bad');
+  spawnParticles('p-smoke', 10);
   readout(timedOut ? '⏱️ TIME\u2019S UP — STALL!' : (blocked ? '🛡️ SHIELD HELD — 0m' : `⚠️ ENGINE FAILURE −${drop.toLocaleString()}m`), 'bad');
   $('#ship').classList.add('shake', 'stalling');
   setAltitude(G.altitude - drop);
@@ -399,9 +480,20 @@ function addDust(n) {
 }
 
 /* ---------------- mission end ---------------- */
+function countUp(el, to, fmt, dur = 1100) {
+  const start = performance.now();
+  (function step(now) {
+    const p = Math.min(1, (now - start) / dur);
+    el.textContent = fmt(to * (1 - Math.pow(1 - p, 3)));
+    if (p < 1) requestAnimationFrame(step);
+  })(start);
+}
+
 function endMission(completed) {
   clearInterval(G.timer);
   G.active = false;
+  $('#vignette').classList.remove('danger');
+  $('#speedlines').style.opacity = 0;
 
   const finalAlt = G.altitude;
   const zone = zoneAt(finalAlt);
@@ -421,11 +513,13 @@ function endMission(completed) {
     : 'YOUR SHIP RAN OUT OF ENERGY';
   const grades = [[10, 'S'], [8, 'A'], [6, 'B'], [4, 'C'], [0, 'D']];
   $('#results-grade').textContent = grades.find(([min]) => G.correct >= min)[1];
-  $('#res-alt').textContent = fmtAlt(finalAlt);
   $('#res-correct').textContent = `${G.correct}/${TUNING.roundSize}`;
   $('#res-streak').textContent = '🔥 ×' + G.maxStreak;
-  $('#res-dust').textContent = '+' + dustEarned + ' ✨';
-  setTimeout(() => show('#screen-results'), completed ? 400 : 600);
+  setTimeout(() => {
+    show('#screen-results');
+    countUp($('#res-alt'), finalAlt, v => fmtAlt(v));
+    countUp($('#res-dust'), dustEarned, v => '+' + Math.round(v) + ' ✨');
+  }, completed ? 400 : 600);
 }
 
 /* ============================================================
@@ -490,9 +584,10 @@ $('#mode-map').onclick = () => { sfx.click(); openMap(); };
 $('#btn-map-close').onclick = () => $('#modal-map').classList.add('hidden');
 $('#btn-again').onclick = () => { sfx.click(); startMission(); };
 $('#btn-hangar').onclick = () => { sfx.click(); goHangar(); };
-$('#btn-abandon').onclick = () => { clearInterval(G.timer); G.active = false; goHangar(); };
+$('#btn-abandon').onclick = () => { clearInterval(G.timer); G.active = false; $('#vignette').classList.remove('danger'); goHangar(); };
 $$('.boost-btn').forEach(b => b.onclick = () => useBoost(b.dataset.boost));
 
 /* init */
 buildWorld();
+requestAnimationFrame(cameraLoop);
 show('#screen-landing');
