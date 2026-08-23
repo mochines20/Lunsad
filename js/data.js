@@ -260,6 +260,52 @@ const PXART = {
     ".CCCCCCCCCCCCCC.",
     "cccccccccccccc.."
   ]},
+  rock: { w: 8, rows: [
+    "..KKKK..",
+    ".KmmmmK.",
+    "KmMmmMmK",
+    "KmmmmmMK",
+    "KMMMMMMK",
+    ".KKKKKK."
+  ]},
+  grassTuft: { w: 8, rows: [
+    "n..n..n.",
+    "n.n.n.nn",
+    "nnnnnnnn"
+  ]},
+  alien: { w: 10, rows: [
+    "..KKKKKK..",
+    ".KNNNNNNK.",
+    "KNKNNNNKNK",
+    "KNWWNNWWNK",
+    "KNKKNNKKNK",
+    "KNNNNNNNNK",
+    "KNNNKKNNNK",
+    ".KNNNNNNK.",
+    "..KNNNNK..",
+    "...KKKK..."
+  ]},
+  ufo: { w: 16, rows: [
+    "......KKKK......",
+    "....KKGGGGKK....",
+    "...KGGKGGKGGK...",
+    "..KGGGGGGGGGK..",
+    ".KKKKKKKKKKKKK.",
+    "KRKYKKKKKKKYKRK",
+    ".KKKKKKKKKKKKK.",
+    "...KKKKKKKKK..."
+  ]},
+  cow: { w: 12, rows: [
+    "..KK.....KK.",
+    ".KWWK...KWWK",
+    "KWWWWKKKWWWK",
+    "KWKWWWWWKWWK",
+    "KWWWWWWWWWWK",
+    "KWWKKWWKKWWK",
+    "KWWWWWWWWWWK",
+    ".KWWWWWWWWK.",
+    "..K.K..K.K.."
+  ]},
   tree: { w: 10, rows: [
     "...NNNN...",
     "..NNNNNN..",

@@ -1461,3 +1461,157 @@ kbd {
   #question-panel { padding: 14px 16px 16px; }
   #q-text { min-height: 0; margin-bottom: 12px; }
 }
+
+
+/* ============================================================
+   WORLD POLISH v4 — living world, pixel consistency
+   (pure presentation; gated by CONFIG in app.js)
+   ============================================================ */
+
+/* ---------- twinkling stars (staggered, never in sync) ---------- */
+.tw-stars { position: absolute; inset: 0; overflow: hidden; }
+.tw-star {
+  position: absolute;
+  background: #fff;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+  animation: twFade 3s ease-in-out infinite;
+}
+@keyframes twFade { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.95; } }
+
+/* ---------- drifting clouds (slow left-to-right parallax) ---------- */
+.cloud.drift { animation: cloudDrift 26s ease-in-out infinite alternate; }
+.cloud.drift.c2 { animation-duration: 34s; }
+.cloud.drift.c3 { animation-duration: 22s; }
+@keyframes cloudDrift { from { transform: translateX(-4vw); } to { transform: translateX(4vw); } }
+
+/* ---------- swaying ground flora (2-3px steps, pixel-snapped) ---------- */
+.sway {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: pxSway 3s steps(1) infinite;
+}
+@keyframes pxSway {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(2px); }
+  50% { transform: translateX(0); }
+  75% { transform: translateX(-2px); }
+}
+.zone .deco { image-rendering: pixelated; }
+
+/* ---------- retro pixel dialog panel (chunky notched corners) ---------- */
+#question-panel, .panel, .mode-card {
+  clip-path: polygon(0 12px, 6px 12px, 6px 6px, 12px 6px, 12px 0,
+    calc(100% - 12px) 0, calc(100% - 12px) 6px, calc(100% - 6px) 6px, calc(100% - 6px) 12px,
+    100% 12px, 100% calc(100% - 12px),
+    calc(100% - 6px) calc(100% - 12px), calc(100% - 6px) calc(100% - 6px),
+    calc(100% - 12px) calc(100% - 6px), calc(100% - 12px) 100%,
+    12px 100%, 12px calc(100% - 6px), 6px calc(100% - 6px), 6px calc(100% - 12px),
+    0 calc(100% - 12px));
+}
+#question-panel { box-shadow: none; filter: drop-shadow(6px 6px 0 rgba(0, 0, 0, 0.5)); }
+
+/* ---------- altimeter: active milestone highlight ---------- */
+.alt-tick.zone-tick.active em {
+  color: var(--gold);
+  border-color: rgba(255, 209, 102, 0.7);
+  background: rgba(40, 26, 6, 0.9);
+  text-shadow: 0 0 8px rgba(255, 209, 102, 0.8);
+  font-weight: 700;
+}
+.alt-tick.zone-tick.active { background: var(--gold); box-shadow: 0 0 12px rgba(255, 209, 102, 0.9); width: 30px; }
+
+/* rocket marker climbing the altitude bar */
+#alt-rocket {
+  position: absolute; left: -15px;
+  width: 22px;
+  transition: bottom 0.3s ease-out;
+  filter: drop-shadow(0 0 6px rgba(255, 180, 94, 0.9));
+  pointer-events: none;
+}
+
+/* ---------- boost tray: available vs used ---------- */
+.boost-btn:disabled { filter: grayscale(1); opacity: 0.35; }
+.boost-btn:not(:disabled) { box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 209, 102, 0.12); }
+.boost-count { text-shadow: none; box-shadow: 0 0 8px rgba(255, 180, 94, 0.5); }
+
+/* ---------- ambient layer (asteroids + easter eggs) ---------- */
+#ambient-layer {
+  position: absolute; inset: 0;
+  z-index: 5;             /* above world, below question card (z9) and HUD */
+  pointer-events: none;
+  overflow: hidden;
+}
+.ambient-asteroid {
+  position: absolute;
+  animation: astDriftR 22s linear forwards;
+  image-rendering: pixelated;
+}
+@keyframes astDriftR {
+  from { left: -48px; transform: rotate(0deg); }
+  to { left: 104vw; transform: rotate(360deg); }
+}
+@keyframes astDriftL {
+  from { left: 104vw; transform: rotate(0deg); }
+  to { left: -48px; transform: rotate(-360deg); }
+}
+
+/* easter egg: alien peeking from the left edge, waving */
+.ee { position: absolute; image-rendering: pixelated; }
+.ee-alien {
+  left: 0; bottom: 34vh;
+  width: 54px;
+  animation: alienPeek 4.5s ease-in-out forwards;
+}
+.ee-alien-svg { width: 100%; filter: drop-shadow(0 0 8px rgba(90, 168, 67, 0.5)); }
+.ee-alien-arm {
+  position: absolute; top: 6px; right: -4px;
+  width: 10px; height: 4px;
+  background: #5aa843;
+  border: 1px solid #182033;
+  transform-origin: left center;
+  animation: alienWave 0.6s steps(2) infinite;
+}
+@keyframes alienPeek {
+  0% { transform: translateX(-110%); }
+  12%, 78% { transform: translateX(6px); }
+  90%, 100% { transform: translateX(-110%); }
+}
+@keyframes alienWave { 0%, 100% { transform: rotate(-30deg); } 50% { transform: rotate(30deg); } }
+
+/* easter egg: UFO abducts a cow across the upper sky */
+.ee-ufo {
+  left: 0; top: 9vh;
+  width: 64px;
+  animation: ufoFly 8.5s linear forwards;
+}
+.ee-ufo-svg { width: 100%; filter: drop-shadow(0 0 10px rgba(143, 212, 255, 0.45)); }
+.ee-beam {
+  position: absolute; left: 50%; top: 100%;
+  width: 26px; height: 54px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(143, 212, 255, 0.4), rgba(143, 212, 255, 0.02));
+  clip-path: polygon(28% 0, 72% 0, 100% 100%, 0 100%);
+  animation: beamBlink 0.7s steps(2) infinite;
+}
+@keyframes beamBlink { 50% { opacity: 0.45; } }
+.ee-cow {
+  position: absolute; left: 50%; top: calc(100% + 40px);
+  width: 30px;
+  transform: translateX(-50%);
+  animation: cowRise 8.5s linear forwards;
+}
+@keyframes cowRise {
+  0%, 28% { top: calc(100% + 40px); opacity: 1; }
+  55% { top: calc(100% + 4px); opacity: 1; }
+  75%, 100% { top: calc(100% - 6px); opacity: 0; }
+}
+@keyframes ufoFly {
+  from { left: -80px; }
+  to { left: 106vw; }
+}
+
+/* keep ambient critters off small screens where the card needs the room */
+@media (max-width: 700px) {
+  .ee-ufo { display: none; }
+  .ee-alien { width: 42px; bottom: 46vh; }
+}

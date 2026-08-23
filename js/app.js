@@ -68,10 +68,31 @@ function buildWorld() {
     el.style.background = `linear-gradient(180deg, ${zone.skyTop} 0%, ${zone.skyBottom} 100%)`;
     el.innerHTML = `
       <div class="zone-banner"><b>${zone.icon} ${zone.name}</b><span>${zone.tag}</span></div>
+      <div class="tw-stars"></div>
       ${decorationsFor(zone.id)}`;
     worldInner.appendChild(el);
   });
   buildAltimeter();
+  seedTwinkles();
+}
+
+/* staggered blinking stars — one cheap layer per zone */
+function seedTwinkles() {
+  if (!CONFIG.twinkleStars) return;
+  $$('.tw-stars').forEach(layer => {
+    layer.innerHTML = '';
+    for (let i = 0; i < 8; i++) {
+      const s = document.createElement('div');
+      s.className = 'tw-star';
+      s.style.left = (4 + Math.random() * 88) + '%';
+      s.style.top = (6 + Math.random() * 55) + '%';
+      const size = Math.random() < 0.3 ? 4 : 3;
+      s.style.width = s.style.height = size + 'px';
+      s.style.animationDuration = (2.2 + Math.random() * 2.8) + 's';
+      s.style.animationDelay = (-Math.random() * 5) + 's';
+      layer.appendChild(s);
+    }
+  });
 }
 
 function decorationsFor(id) {
@@ -79,6 +100,7 @@ function decorationsFor(id) {
     case 'earth':
       return `
         <div class="deco deco-ground"></div>
+        ${groundDetail()}
         <div class="deco" style="left:7%;bottom:26%;width:64px">${px(PXART.tree)}</div>
         <div class="deco" style="left:20%;bottom:14%;width:44px">${px(PXART.tree)}</div>
         <div class="deco" style="right:9%;bottom:24%;width:56px">${px(PXART.tree)}</div>
@@ -86,18 +108,18 @@ function decorationsFor(id) {
         <div class="deco" style="left:33%;bottom:8%;width:44px">${px(PXART.bush)}</div>
         <div class="deco deco-pad"></div>
         <div class="deco deco-sun" style="top:8%;right:10%;width:110px">${px(PXART.sun)}</div>
-        <div class="deco cloud" style="top:16%;left:9%;width:170px">${px(PXART.cloud)}</div>
-        <div class="deco cloud c2" style="top:32%;right:7%;width:120px">${px(PXART.cloud)}</div>`;
+        <div class="deco cloud drift" style="top:16%;left:9%;width:170px">${px(PXART.cloud)}</div>
+        <div class="deco cloud drift c2" style="top:32%;right:7%;width:120px">${px(PXART.cloud)}</div>`;
     case 'clouds':
       return `
-        <div class="deco cloud" style="top:10%;left:6%;width:190px">${px(PXART.cloud)}</div>
-        <div class="deco cloud c2" style="top:34%;right:5%;width:230px">${px(PXART.cloud)}</div>
-        <div class="deco cloud c3" style="top:58%;left:18%;width:150px">${px(PXART.cloud)}</div>
-        <div class="deco cloud" style="top:78%;right:20%;width:180px">${px(PXART.cloud)}</div>`;
+        <div class="deco cloud drift" style="top:10%;left:6%;width:190px">${px(PXART.cloud)}</div>
+        <div class="deco cloud drift c2" style="top:34%;right:5%;width:230px">${px(PXART.cloud)}</div>
+        <div class="deco cloud drift c3" style="top:58%;left:18%;width:150px">${px(PXART.cloud)}</div>
+        <div class="deco cloud drift" style="top:78%;right:20%;width:180px">${px(PXART.cloud)}</div>`;
     case 'atmosphere':
       return `
-        <div class="deco cloud" style="top:66%;left:8%;width:160px;opacity:0.55">${px(PXART.cloud)}</div>
-        <div class="deco cloud c2" style="top:80%;right:10%;width:130px;opacity:0.45">${px(PXART.cloud)}</div>
+        <div class="deco cloud drift" style="top:66%;left:8%;width:160px;opacity:0.55">${px(PXART.cloud)}</div>
+        <div class="deco cloud drift c2" style="top:80%;right:10%;width:130px;opacity:0.45">${px(PXART.cloud)}</div>
         ${starField(10)}`;
     case 'stratosphere':
       return `
@@ -124,6 +146,18 @@ function decorationsFor(id) {
   }
 }
 
+function groundDetail() {
+  let out = '';
+  for (let i = 0; i < 9; i++) {
+    const x = 4 + i * 11 + (i % 3) * 2;
+    out += `<div class="deco sway" style="left:${x}%;bottom:1.5%;width:${i % 2 ? 22 : 16}px;animation-delay:${(i * 0.7) % 3}s">${px(PXART.grassTuft)}</div>`;
+  }
+  [[14, 3.5, 26], [46, 2, 20], [78, 4, 24]].forEach(([x, b, w], i) => {
+    out += `<div class="deco" style="left:${x}%;bottom:${b}%;width:${w}px;opacity:0.9">${px(PXART.rock)}</div>`;
+  });
+  return out;
+}
+
 function starField(n) {
   let out = '';
   for (let i = 0; i < n; i++) {
@@ -136,6 +170,15 @@ function starField(n) {
 /* ============================================================
    GAME STATE
    ============================================================ */
+/* ============================================================
+   GAME CONFIG — visual polish toggles (no gameplay effect)
+   ============================================================ */
+const CONFIG = {
+  easterEggs: true,   // alien peek / UFO abduction ambient events
+  asteroid: true,     // occasional debris drifting across the top
+  twinkleStars: true, // staggered blinking stars in every zone
+};
+
 const G = {
   active: false,
   altitude: 0,
@@ -198,7 +241,64 @@ function cameraLoop() {
     $('#hud-zone').textContent = zone.name;
     if (G.active && cam.pos > 100) zoneBanner(zone);
   }
+  updateAltimeterState();
   requestAnimationFrame(cameraLoop);
+}
+
+/* ============================================================
+   AMBIENT EVENTS — asteroid drift + easter eggs
+   Purely decorative; gated behind CONFIG, cleaned up on mission end.
+   ============================================================ */
+let ambientTimer = null;
+
+function spawnAsteroid() {
+  if (!CONFIG.asteroid || !G.active) return;
+  const layer = $('#ambient-layer');
+  const a = document.createElement('div');
+  a.className = 'ambient-asteroid';
+  const size = 16 + Math.random() * 14;
+  const fromRight = Math.random() < 0.5;
+  a.style.top = (6 + Math.random() * 14) + 'vh';
+  a.style.width = size + 'px';
+  a.innerHTML = px(PXART.rock);
+  a.style.animationName = fromRight ? 'astDriftL' : 'astDriftR';
+  layer.appendChild(a);
+  setTimeout(() => a.remove(), 24000);
+}
+
+function spawnEasterEgg() {
+  if (!CONFIG.easterEggs || !G.active) return;
+  const layer = $('#ambient-layer');
+  const type = Math.random() < 0.5 ? 'alien' : 'ufo';
+  const wrap = document.createElement('div');
+  wrap.className = 'ee ee-' + type;
+  if (type === 'alien') {
+    wrap.innerHTML = `<div class="ee-alien-svg">${px(PXART.alien)}</div><div class="ee-alien-arm"></div>`;
+  } else {
+    wrap.innerHTML = `
+      <div class="ee-ufo-svg">${px(PXART.ufo)}</div>
+      <div class="ee-beam"></div>
+      <div class="ee-cow">${px(PXART.cow)}</div>`;
+  }
+  layer.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 9000);
+}
+
+function ambientTick() {
+  if (document.hidden || !G.active) return;
+  if (Math.random() < 0.35) spawnAsteroid();
+  else if (Math.random() < 0.22) spawnEasterEgg();
+}
+
+function startAmbient() {
+  stopAmbient();
+  ambientTimer = setInterval(ambientTick, 24000);
+  setTimeout(ambientTick, 6000); // first surprise lands early in the flight
+}
+
+function stopAmbient() {
+  if (ambientTimer) { clearInterval(ambientTimer); ambientTimer = null; }
+  $('#ambient-layer').innerHTML = '';
 }
 
 function zoneBanner(zone) {
@@ -215,10 +315,27 @@ function buildAltimeter() {
   ZONES.forEach(zone => {
     const t = document.createElement('div');
     t.className = 'alt-tick zone-tick';
+    t.id = 'altick-' + zone.id;
     t.style.bottom = (zone.alt / WORLD_TOP) * 100 + '%';
     t.innerHTML = `<em>${zone.label.toUpperCase()}</em>`;
     ticks.appendChild(t);
   });
+  if (!$('#alt-rocket')) {
+    const r = document.createElement('div');
+    r.id = 'alt-rocket';
+    r.innerHTML = pxIcon('rocket');
+    $('#altimeter').appendChild(r);
+  }
+}
+
+function updateAltimeterState() {
+  const cur = zoneAt(G.altitude);
+  ZONES.forEach(z => {
+    const el = $('#altick-' + z.id);
+    if (el) el.classList.toggle('active', z.id === cur.id);
+  });
+  const r = $('#alt-rocket');
+  if (r) r.style.bottom = `calc(${(G.altitude / WORLD_TOP) * 100}% - 8px)`;
 }
 
 function fmtAlt(a) { return Math.round(a).toLocaleString('en-US') + 'm'; }
@@ -249,6 +366,8 @@ function startMission() {
   $('#ship').className = 'ship-fly';
   updateBoostBar();
   setAltitude(0, true);
+  updateAltimeterState();
+  startAmbient();
   $('#question-panel').classList.add('hidden');
   $('#fact-toast').classList.add('hidden');
 
@@ -527,6 +646,7 @@ function countUp(el, to, fmt, dur = 1100) {
 
 function endMission(completed) {
   clearInterval(G.timer);
+  stopAmbient();
   G.active = false;
   $('#vignette').classList.remove('danger');
   $('#speedlines').style.opacity = 0;
@@ -627,7 +747,7 @@ $('#btn-help-hangar').onclick = () => { sfx.click(); $('#modal-help').classList.
 $('#btn-help-close').onclick = () => { sfx.click(); $('#modal-help').classList.add('hidden'); };
 $('#btn-again').onclick = () => { sfx.click(); startMission(); };
 $('#btn-hangar').onclick = () => { sfx.click(); goHangar(); };
-$('#btn-abandon').onclick = () => { clearInterval(G.timer); G.active = false; $('#vignette').classList.remove('danger'); goHangar(); };
+$('#btn-abandon').onclick = () => { clearInterval(G.timer); stopAmbient(); G.active = false; $('#vignette').classList.remove('danger'); goHangar(); };
 $$('.boost-btn').forEach(b => b.onclick = () => useBoost(b.dataset.boost));
 
 /* keyboard controls — arcade style */
