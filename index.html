@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUNSAD — Launch Your Knowledge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ============ LANDING ============ -->
+<section id="screen-landing" class="screen active">
+  <div class="landing-stars"></div>
+  <div class="landing-earth"></div>
+  <div class="landing-ship" aria-hidden="true">
+    <svg viewBox="0 0 60 100" class="ship-svg"><use href="#ship-shape"/></svg>
+  </div>
+  <div class="landing-content">
+    <p class="landing-eyebrow">A KNOWLEDGE-POWERED SPACE ADVENTURE</p>
+    <h1 class="landing-logo">LUNSAD</h1>
+    <p class="landing-tagline">Launch Your Knowledge</p>
+    <p class="landing-sub">The higher you answer, the farther you go.<br>How high can you go?</p>
+    <div class="landing-actions">
+      <button class="btn btn-primary btn-lg" id="btn-launch-start">🚀 START MISSION</button>
+    </div>
+    <div class="landing-auth">
+      <p class="auth-label">CONTINUE WITH</p>
+      <div class="auth-buttons">
+        <button class="btn btn-auth" data-auth="google">🔵 Google</button>
+        <button class="btn btn-auth" data-auth="apple"> Apple</button>
+        <button class="btn btn-auth" data-auth="email">✉️ Email</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PILOT SETUP (mock auth) ============ -->
+<section id="screen-onboard" class="screen">
+  <div class="panel onboard-panel">
+    <p class="panel-eyebrow" id="onboard-via">MISSION CONTROL</p>
+    <h2 class="panel-title">Choose your pilot</h2>
+    <div class="avatar-row" id="avatar-row">
+      <button class="avatar-opt selected" data-avatar="👨‍🚀">👨‍🚀</button>
+      <button class="avatar-opt" data-avatar="👩‍🚀">👩‍🚀</button>
+      <button class="avatar-opt" data-avatar="🧑‍🚀">🧑‍🚀</button>
+      <button class="avatar-opt" data-avatar="🤖">🤖</button>
+      <button class="avatar-opt" data-avatar="👽">👽</button>
+    </div>
+    <label class="field-label" for="pilot-name">CALLSIGN</label>
+    <input id="pilot-name" class="text-input" type="text" maxlength="16" placeholder="e.g. Adarna-7" autocomplete="off">
+    <button class="btn btn-primary btn-lg" id="btn-board">WELCOME ABOARD →</button>
+  </div>
+</section>
+
+<!-- ============ HANGAR (home) ============ -->
+<section id="screen-hangar" class="screen">
+  <div class="hangar-stars"></div>
+  <header class="hangar-top">
+    <div class="hangar-brand">LUNSAD</div>
+    <div class="hangar-stats">
+      <span class="stat-chip" title="Stardust">✨ <b id="hangar-dust">0</b></span>
+      <span class="stat-chip" title="Best altitude">📡 <b id="hangar-best">0m</b></span>
+      <span class="stat-chip pilot-chip"><span id="hangar-avatar">👨‍🚀</span> <b id="hangar-name">Pilot</b></span>
+    </div>
+  </header>
+  <div class="hangar-body">
+    <div class="hangar-ship-wrap">
+      <svg viewBox="0 0 60 100" class="ship-svg ship-idle"><use href="#ship-shape"/></svg>
+      <div class="hangar-ship-name">LUNSAD-01</div>
+      <div class="hangar-alt">CURRENT RECORD <b id="hangar-alt-num">0m</b></div>
+    </div>
+    <button class="btn btn-primary btn-xl pulse" id="btn-play">🚀 PLAY NOW</button>
+    <div class="hangar-modes">
+      <button class="mode-card" id="mode-solo"><span class="mode-icon">🚀</span><span>SOLO</span><em>10 questions · 3 energy</em></button>
+      <button class="mode-card locked" id="mode-duo" disabled><span class="mode-icon">🏆</span><span>DUO</span><em>coming soon</em></button>
+      <button class="mode-card" id="mode-map"><span class="mode-icon">🗺️</span><span>FLIGHT MAP</span><em>see the journey</em></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="screen-game" class="screen">
+  <!-- The vertical world: translated by JS as altitude changes -->
+  <div id="world">
+    <div id="world-inner"><!-- zones injected by JS --></div>
+  </div>
+
+  <!-- The ship: fixed in view, world moves around it -->
+  <div id="ship-layer">
+    <div id="ship" class="ship-fly">
+      <div class="ship-flame"></div>
+      <svg viewBox="0 0 60 100" class="ship-svg"><use href="#ship-shape"/></svg>
+      <div class="ship-shield-ring"></div>
+    </div>
+    <div id="thrust-readout"></div>
+  </div>
+
+  <!-- HUD -->
+  <header id="hud">
+    <div class="hud-left">
+      <span id="hud-energy" class="hud-energy">❤️❤️❤️</span>
+      <span id="hud-dust" class="hud-dust">✨ 0</span>
+    </div>
+    <div class="hud-center">
+      <div id="hud-zone">EARTH</div>
+      <div id="hud-alt">0m</div>
+    </div>
+    <div class="hud-right">
+      <span id="hud-streak" class="hud-streak"></span>
+      <span id="hud-q">Q 01/10</span>
+    </div>
+  </header>
+
+  <!-- Question card -->
+  <div id="question-panel" class="hidden">
+    <div class="q-head">
+      <span id="q-diff" class="q-diff"></span>
+      <div class="q-timer"><div id="q-timer-bar"></div></div>
+    </div>
+    <h3 id="q-text"></h3>
+    <div id="q-options"></div>
+    <div id="q-hint" class="q-hint hidden"></div>
+  </div>
+
+  <!-- Fact toast -->
+  <div id="fact-toast" class="hidden">
+    <div class="fact-label">💡 DID YOU KNOW?</div>
+    <p id="fact-text"></p>
+  </div>
+
+  <!-- Feedback flash -->
+  <div id="feedback-flash"></div>
+
+  <!-- Boosters / hints bar -->
+  <footer id="booster-bar">
+    <button class="boost-btn" data-boost="radar" title="Radar — remove one wrong answer">💡<span>RADAR</span><i class="boost-count"></i></button>
+    <button class="boost-btn" data-boost="scan" title="Scan — show a clue">🛰️<span>SCAN</span><i class="boost-count"></i></button>
+    <button class="boost-btn" data-boost="boost" title="Boost — 2× thrust on next correct">🚀<span>BOOST</span><i class="boost-count"></i></button>
+    <button class="boost-btn" data-boost="shield" title="Shield — block next altitude loss">🛡️<span>SHIELD</span><i class="boost-count"></i></button>
+    <button class="boost-btn" data-boost="warp" title="Warp — skip question, -300m">⏭️<span>WARP</span><i class="boost-count"></i></button>
+  </footer>
+
+  <button id="btn-abandon" title="Abort mission">✕</button>
+</section>
+
+<!-- ============ FLIGHT MAP MODAL ============ -->
+<div id="modal-map" class="modal hidden">
+  <div class="panel map-panel">
+    <h2 class="panel-title">FLIGHT MAP</h2>
+    <div id="map-track"></div>
+    <button class="btn btn-ghost" id="btn-map-close">CLOSE</button>
+  </div>
+</div>
+
+<!-- ============ RESULTS ============ -->
+<section id="screen-results" class="screen">
+  <div class="landing-stars"></div>
+  <div class="panel results-panel">
+    <p class="panel-eyebrow" id="results-eyebrow">MISSION COMPLETE</p>
+    <h2 class="results-title" id="results-title">🌌 YOU REACHED ORBIT</h2>
+    <div class="results-grade" id="results-grade">A</div>
+    <div class="results-grid">
+      <div class="res-stat"><em>FINAL ALTITUDE</em><b id="res-alt">0m</b></div>
+      <div class="res-stat"><em>CORRECT</em><b id="res-correct">0/10</b></div>
+      <div class="res-stat"><em>MAX STREAK</em><b id="res-streak">0</b></div>
+      <div class="res-stat"><em>STARDUST EARNED</em><b id="res-dust">+0</b></div>
+    </div>
+    <div class="results-actions">
+      <button class="btn btn-primary" id="btn-again">🚀 FLY AGAIN</button>
+      <button class="btn btn-ghost" id="btn-hangar">HANGAR</button>
+    </div>
+  </div>
+</section>
+
+<!-- Shared ship vector -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <g id="ship-shape">
+      <path d="M30 2 C40 18 46 34 46 52 L46 66 L14 66 L14 52 C14 34 20 18 30 2 Z" fill="#e8ecf4" stroke="#9aa7c2" stroke-width="2"/>
+      <circle cx="30" cy="34" r="8" fill="#2fd6ff" stroke="#0b1030" stroke-width="2.5"/>
+      <path d="M14 52 L2 78 L14 70 Z" fill="#ff5c7a" stroke="#9aa7c2" stroke-width="2"/>
+      <path d="M46 52 L58 78 L46 70 Z" fill="#ff5c7a" stroke="#9aa7c2" stroke-width="2"/>
+      <rect x="22" y="66" width="16" height="8" rx="3" fill="#9aa7c2"/>
+    </g>
+  </defs>
+</svg>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
