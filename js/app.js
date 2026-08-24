@@ -12,26 +12,37 @@ const $$ = (sel) => [...document.querySelectorAll(sel)];
 /* ---------------- persistence ---------------- */
 const PROFILE_KEY = 'lunsad_profile';
 const PROFILE_VERSION = 2; // bump when the profile schema changes
+/* ---------------- daily streak — play-at-least-one-mission-per-day ---------------- */
+function bumpDailyStreak() {
+  const today = new Date().toISOString().slice(0, 10);
+  const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  if (profile.lastPlayDay === today) return;         // already counted today
+  profile.streakDays = profile.lastPlayDay === y ? (profile.streakDays || 0) + 1 : 1;
+  profile.lastPlayDay = today;
+  saveProfile();
+}
+
 const profile = loadProfile();
 
 function loadProfile() {
   try {
     const p = JSON.parse(localStorage.getItem(PROFILE_KEY)) || { name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0 };
-    if (p.v !== PROFILE_VERSION) { // v1 saves had no version field; fill new keys
+    if (p.v !== PROFILE_VERSION) {
       p.v = PROFILE_VERSION;
       p.seenLocal = p.seenLocal ?? false;
-      p.daily = p.daily ?? { day: '', seed: 0, bestAlt: 0, plays: 0 };
+      p.streakDays = p.streakDays ?? 0;
+      p.lastPlayDay = p.lastPlayDay ?? '';
       localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
     }
     return p;
-  } catch { return { v: PROFILE_VERSION, name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0, seenLocal: false, daily: { day: '', seed: 0, bestAlt: 0, plays: 0 } }; }
+  } catch { return { v: PROFILE_VERSION, name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0, seenLocal: false, streakDays: 0, lastPlayDay: '' }; }
 }
 function saveProfile() { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }
 
 /* deterministic daily seed — same questions for everyone on the same day */
 function dailySeed() {
   const day = new Date().toISOString().slice(0, 10);
-  if (profile.daily.day !== day) {
+  if (profile.daily?.day !== day) {
     let h = 0;
     for (const ch of day) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
     profile.daily = { day, seed: h, bestAlt: 0, plays: 0 };
@@ -379,8 +390,10 @@ function startMission() {
     questions: drawQuestions(),
     boosts: { radar: 2, scan: 2, boost: 1, shield: 1, warp: 1 },
     armed: { boost: false, shield: false },
+    charged: false,
     answered: false, currentZone: ZONES[0]
   });
+  bumpDailyStreak();
   buildWorld();
   show('#screen-game');
   $('#vignette').classList.remove('danger');
@@ -564,17 +577,45 @@ function onWrong(q, timedOut) {
   showFact();
 
   if (G.energy <= 0) {
-    G.active = false;
-    setTimeout(() => { sfx.fail(); endMission(false); }, 2000);
+    if (!G.charged) { // emergency recharge — once per mission
+      G.charged = true;
+      G.energy = 1;
+      renderEnergy();
+      sfx.shieldUp();
+      readout('🔋 EMERGENCY RECHARGE — BACK UP!', 'good');
+      $('#hud').classList.add('recharge-flash');
+      setTimeout(() => $('#hud').classList.remove('recharge-flash'), 1200);
+    } else {
+      G.active = false;
+      setTimeout(() => { sfx.fail(); endMission(false); }, 2000);
+    }
+    return;
   }
 }
 
+/* ---------------- mid-mission purchases — spend collected stardust ---------------- */
+const BUY_COSTS = { radar: 40, scan: 40, boost: 80, shield: 80, warp: 120 };
+
+function canAfford(kind) { return G.dust >= BUY_COSTS[kind]; }
+
 /* ---------------- boosters ---------------- */
+function parseDustButton(btn) {
+  const kind = btn.dataset.boost;
+  const buy = canAfford(kind) ? '' : 'data-icn="lock"';
+  return { kind, buy };
+}
+
 function useBoost(kind) {
-  if (!G.active || G.answered || G.boosts[kind] <= 0) return;
+  if (!G.active || G.answered) return;
+  const owned = G.boosts[kind] > 0;
+  const buying = !owned && canAfford(kind);
+  if (!owned && !buying) return;
+
   const q = G.questions[G.qIndex];
   const btn = $(`.boost-btn[data-boost="${kind}"]`);
   sfx.click();
+
+  if (buying) { G.dust -= BUY_COSTS[kind]; } // pay in collected stardust
 
   switch (kind) {
     case 'radar': {
@@ -614,17 +655,23 @@ function useBoost(kind) {
       return;
     }
   }
-  G.boosts[kind]--;
+  if (!buying) G.boosts[kind]--; // purchases don't consume the free inventory
   updateBoostBar();
 }
 
 function updateBoostBar() {
   $$('.boost-btn').forEach(btn => {
     const kind = btn.dataset.boost;
-    btn.querySelector('.boost-count').textContent = G.boosts[kind] ?? 0;
-    btn.disabled = !G.active || G.answered || (G.boosts[kind] ?? 0) <= 0
+    const owned = G.boosts[kind] ?? 0;
+    const price = BUY_COSTS[kind];
+    const affordable = G.active && G.dust >= price;
+    btn.querySelector('.boost-count').textContent = owned > 0 ? owned
+      : (affordable ? '✨' + price : '0');
+    btn.disabled = !G.active || G.answered || (owned <= 0 && !affordable)
       || (kind !== 'warp' && (G.armed.boost && kind === 'boost'));
+    btn.classList.toggle('on-sale', owned <= 0 && affordable);
   });
+  $('#hud-dust b').textContent = G.dust;
 }
 
 /* ---------------- feedback helpers ---------------- */
@@ -663,6 +710,7 @@ function showFact() {
 function addDust(n) {
   G.dust += n;
   $('#hud-dust b').textContent = G.dust;
+  updateBoostBar(); // affordability may have changed
   const el = $('#hud-dust');
   el.classList.remove('bump');
   void el.offsetWidth;
@@ -726,6 +774,7 @@ function goHangar() {
   $('#hangar-dust').textContent = profile.dust.toLocaleString();
   $('#hangar-best').textContent = fmtAlt(profile.bestAlt);
   $('#hangar-alt-num').textContent = fmtAlt(profile.bestAlt);
+  $('#hangar-streak').textContent = profile.streakDays || 0;
   show('#screen-hangar');
 }
 
