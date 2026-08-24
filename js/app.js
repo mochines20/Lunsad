@@ -32,10 +32,11 @@ function loadProfile() {
       p.seenLocal = p.seenLocal ?? false;
       p.streakDays = p.streakDays ?? 0;
       p.lastPlayDay = p.lastPlayDay ?? '';
+      p.daily = p.daily ?? { day: '', seed: 0, bestAlt: 0, plays: 0 };
       localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
     }
     return p;
-  } catch { return { v: PROFILE_VERSION, name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0, seenLocal: false, streakDays: 0, lastPlayDay: '' }; }
+  } catch { return { v: PROFILE_VERSION, name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0, seenLocal: false, streakDays: 0, lastPlayDay: '', daily: { day: '', seed: 0, bestAlt: 0, plays: 0 } }; }
 }
 function saveProfile() { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }
 
