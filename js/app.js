@@ -9,6 +9,16 @@
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 
+/* surface errors as visible DOM to ease blind debugging in restricted environments */
+window.onerror = (msg, src, line, col) => {
+  const el = document.createElement('div');
+  el.id = 'debug-error';
+  el.textContent = `⚠️ ${msg} @${src.split('/').pop()}:${line}:${col}`;
+  el.style.cssText = 'position:fixed;top:4px;left:4px;z-index:9999;color:#ff5c7a;font:11px/1.4 monospace;background:rgba(0,0,0,.85);padding:4px 8px;border:1px solid #ff5c7a;max-width:90vw;';
+  document.body.appendChild(el);
+  return true;
+};
+
 /* ---------------- persistence ---------------- */
 const PROFILE_KEY = 'lunsad_profile';
 const PROFILE_VERSION = 2; // bump when the profile schema changes
