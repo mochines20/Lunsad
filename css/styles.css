@@ -1663,3 +1663,10 @@ kbd {
   0%, 100% { box-shadow: none; }
   25%, 65% { box-shadow: 0 0 28px rgba(87, 242, 175, 0.75); }
 }
+
+/* ============================================================
+   DAILY MODE — card accent + countdown styling
+   ============================================================ */
+#mode-daily { border-color: rgba(87, 242, 175, 0.45); }
+#mode-daily:hover:not(.locked) { border-color: #57f2af; box-shadow: 6px 8px 0 rgba(0,0,0,0.45), 0 0 24px rgba(87,242,175,0.18); }
+#daily-sub { color: #9df2c8; }

@@ -377,17 +377,29 @@ function updateAltimeterState() {
 function fmtAlt(a) { return Math.round(a).toLocaleString('en-US') + 'm'; }
 
 /* ---------------- mission setup ---------------- */
-function drawQuestions() {
+/* seeded RNG — deterministic question set for the Daily Mission */
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function drawQuestions(seed) {
+  const rng = seed == null ? Math.random : mulberry32(seed);
   const by = d => QUESTIONS.filter(q => q.d === d);
-  const pick = (arr, n) => arr.sort(() => Math.random() - 0.5).slice(0, n);
+  const pick = (arr, n) => arr.sort(() => rng() - 0.5).slice(0, n);
   return [...pick(by(1), 3), ...pick(by(2), 4), ...pick(by(3), 3)];
 }
 
-function startMission() {
+function startMission(mode, seed) {
   Object.assign(G, {
     active: true, altitude: 0, energy: TUNING.startEnergy, dust: 0,
     streak: 0, maxStreak: 0, correct: 0, qIndex: 0,
-    questions: drawQuestions(),
+    mode: mode || 'solo',
+    questions: drawQuestions(mode === 'daily' ? seed : undefined),
     boosts: { radar: 2, scan: 2, boost: 1, shield: 1, warp: 1 },
     armed: { boost: false, shield: false },
     charged: false,
@@ -747,6 +759,15 @@ function endMission(completed) {
   profile.bestAlt = Math.max(profile.bestAlt, finalAlt);
   saveProfile();
 
+  // record daily attempt (local-only leaderboard for now)
+  if (G.mode === 'daily') {
+    const day = new Date().toISOString().slice(0, 10);
+    profile.lastDaily = { day, altitude: G.altitude, correct: G.correct, at: Date.now() };
+    if (completed) profile.daily.bestAlt = Math.max(profile.daily.bestAlt || 0, finalAlt);
+    profile.daily.plays = (profile.daily.plays || 0) + 1;
+    saveProfile();
+  }
+
   $('#results-eyebrow').textContent = completed ? 'MISSION COMPLETE' : 'MISSION FAILED';
   $('#results-eyebrow').classList.toggle('results-eyebrow-fail', !completed);
   $('#results-title').textContent = completed
@@ -757,6 +778,9 @@ function endMission(completed) {
   $('#results-grade').textContent = grades.find(([min]) => G.correct >= min)[1];
   $('#res-correct').textContent = `${G.correct}/${TUNING.roundSize}`;
   $('#res-streak').textContent = '×' + G.maxStreak;
+  if (G.mode === 'daily') {
+    $('#res-streak').textContent += ' 🌅 DAILY SEED';
+  }
   setTimeout(() => {
     show('#screen-results');
     countUp($('#res-alt'), finalAlt, v => fmtAlt(v));
@@ -775,7 +799,23 @@ function goHangar() {
   $('#hangar-best').textContent = fmtAlt(profile.bestAlt);
   $('#hangar-alt-num').textContent = fmtAlt(profile.bestAlt);
   $('#hangar-streak').textContent = profile.streakDays || 0;
+  updateDailyCard();
   show('#screen-hangar');
+}
+
+function updateDailyCard() {
+  let seed;
+  try { seed = dailySeed(); }
+  catch { $('#daily-sub').textContent = 'seed error — solo only'; $('#mode-daily').onclick = null; return; }
+  const sub = $('#daily-sub');
+  const btn = $('#mode-daily');
+  if (profile.daily?.plays > 0) {
+    sub.textContent = `best: ${fmtAlt(profile.daily.bestAlt)} · plays ${profile.daily.plays}`;
+  }
+  const now = Date.now(), end = new Date().setHours(24, 0, 0, 0);
+  const pad = n => String(n).padStart(2, '0');
+  btn.title = `Today's seed · resets in ${pad(Math.floor((end - now) / 3.6e6))}:${pad(Math.floor(((end - now) % 3.6e6) / 6e4))}:${pad(Math.floor(((end - now) % 6e4) / 1e3))}`;
+  btn.onclick = () => { sfx.click(); startMission('daily', seed); };
 }
 
 function openMap() {
