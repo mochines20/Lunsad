@@ -815,7 +815,6 @@ function updateDailyCard() {
   const now = Date.now(), end = new Date().setHours(24, 0, 0, 0);
   const pad = n => String(n).padStart(2, '0');
   btn.title = `Today's seed · resets in ${pad(Math.floor((end - now) / 3.6e6))}:${pad(Math.floor(((end - now) % 3.6e6) / 6e4))}:${pad(Math.floor(((end - now) % 6e4) / 1e3))}`;
-  btn.onclick = () => { sfx.click(); startMission('daily', seed); };
 }
 
 function openMap() {
@@ -864,6 +863,7 @@ $('#btn-board').onclick = () => {
 
 $('#btn-play').onclick = () => { sfx.click(); startMission(); };
 $('#mode-solo').onclick = () => { sfx.click(); startMission(); };
+$('#mode-daily').onclick = () => { sfx.click(); startMission('daily', dailySeed()); };
 $('#mode-map').onclick = () => { sfx.click(); openMap(); };
 $('#btn-map-close').onclick = () => $('#modal-map').classList.add('hidden');
 $('#btn-help-landing').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
