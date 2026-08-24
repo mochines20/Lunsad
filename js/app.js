@@ -11,14 +11,34 @@ const $$ = (sel) => [...document.querySelectorAll(sel)];
 
 /* ---------------- persistence ---------------- */
 const PROFILE_KEY = 'lunsad_profile';
+const PROFILE_VERSION = 2; // bump when the profile schema changes
 const profile = loadProfile();
 
 function loadProfile() {
   try {
-    return JSON.parse(localStorage.getItem(PROFILE_KEY)) || { name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0 };
-  } catch { return { name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0 }; }
+    const p = JSON.parse(localStorage.getItem(PROFILE_KEY)) || { name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0 };
+    if (p.v !== PROFILE_VERSION) { // v1 saves had no version field; fill new keys
+      p.v = PROFILE_VERSION;
+      p.seenLocal = p.seenLocal ?? false;
+      p.daily = p.daily ?? { day: '', seed: 0, bestAlt: 0, plays: 0 };
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
+    }
+    return p;
+  } catch { return { v: PROFILE_VERSION, name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0, seenLocal: false, daily: { day: '', seed: 0, bestAlt: 0, plays: 0 } }; }
 }
 function saveProfile() { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }
+
+/* deterministic daily seed — same questions for everyone on the same day */
+function dailySeed() {
+  const day = new Date().toISOString().slice(0, 10);
+  if (profile.daily.day !== day) {
+    let h = 0;
+    for (const ch of day) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    profile.daily = { day, seed: h, bestAlt: 0, plays: 0 };
+    saveProfile();
+  }
+  return profile.daily.seed;
+}
 
 /* ---------------- screens ---------------- */
 function show(id) {
@@ -48,7 +68,12 @@ const sfx = {
   thrust: () => { beep(180, 0.5, 'sawtooth', 0.05); beep(320, 0.5, 'sawtooth', 0.04, 0.08); },
   launch: () => { beep(120, 0.9, 'sawtooth', 0.07); beep(240, 0.9, 'triangle', 0.06, 0.15); },
   warp:   () => { beep(880, 0.1, 'square', 0.05); beep(440, 0.18, 'square', 0.05, 0.1); },
-  fail:   () => { beep(196, 0.4, 'sawtooth', 0.09); beep(130, 0.6, 'sawtooth', 0.09, 0.25); beep(98, 0.8, 'sawtooth', 0.09, 0.5); }
+  fail:   () => { beep(196, 0.4, 'sawtooth', 0.09); beep(130, 0.6, 'sawtooth', 0.09, 0.25); beep(98, 0.8, 'sawtooth', 0.09, 0.5); },
+  radar:  () => { beep(1200, 0.06, 'square', 0.05); beep(1200, 0.06, 'square', 0.05, 0.09); },
+  scan:   () => { beep(392, 0.1, 'sine', 0.07); beep(588, 0.14, 'sine', 0.07, 0.1); },
+  boostArm:() => { beep(330, 0.1, 'sawtooth', 0.07); beep(660, 0.12, 'sawtooth', 0.07, 0.08); beep(990, 0.16, 'sawtooth', 0.06, 0.16); },
+  shieldUp:() => { beep(440, 0.15, 'triangle', 0.08); beep(440, 0.15, 'triangle', 0.08, 0.2); },
+  tick:   () => beep(1000, 0.05, 'square', 0.045)
 };
 
 /* ============================================================
@@ -445,10 +470,15 @@ function startTimer() {
   const bar = $('#q-timer-bar');
   bar.classList.remove('low');
   bar.style.width = '100%';
+  let lastTickSecond = -1;
   G.timer = setInterval(() => {
     G.timeLeft -= 0.1;
     bar.style.width = Math.max(0, (G.timeLeft / TUNING.questionTime) * 100) + '%';
     bar.classList.toggle('low', G.timeLeft <= 8);
+    if (G.timeLeft <= 10 && G.timeLeft > 0) { // audible urgency in the final stretch
+      const sec = Math.floor(G.timeLeft);
+      if (sec !== lastTickSecond) { lastTickSecond = sec; sfx.tick(); }
+    }
     if (G.timeLeft <= 0) {
       clearInterval(G.timer);
       answer(-1); // timeout = wrong
@@ -526,6 +556,7 @@ function onWrong(q, timedOut) {
   sfx.wrong();
   flash('bad');
   spawnParticles('p-smoke', 10);
+  $('#question-panel').classList.add('shake-once');
   readout(timedOut ? '⏱️ TIME\u2019S UP — STALL!' : (blocked ? '🛡️ SHIELD HELD — 0m' : `⚠️ ENGINE FAILURE −${drop.toLocaleString()}m`), 'bad');
   $('#ship').classList.add('shake', 'stalling');
   setAltitude(G.altitude - drop);
@@ -547,6 +578,7 @@ function useBoost(kind) {
 
   switch (kind) {
     case 'radar': {
+      sfx.radar();
       const wrongOpts = $$('.q-opt').filter((o, i) => i !== q.c && !o.classList.contains('eliminated'));
       const victim = wrongOpts[Math.floor(Math.random() * wrongOpts.length)];
       victim.classList.add('eliminated');
@@ -554,14 +586,17 @@ function useBoost(kind) {
       break;
     }
     case 'scan':
+      sfx.scan();
       $('#q-hint').textContent = '🛰️ ' + q.hint;
       $('#q-hint').classList.remove('hidden');
       break;
     case 'boost':
+      sfx.boostArm();
       G.armed.boost = true;
       btn.classList.add('armed');
       break;
     case 'shield':
+      sfx.shieldUp();
       G.armed.shield = true;
       $('#ship').classList.add('shielded');
       btn.classList.add('armed');
