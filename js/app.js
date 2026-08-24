@@ -37,18 +37,17 @@ const profile = loadProfile();
 function loadProfile() {
   try {
     const p = JSON.parse(localStorage.getItem(PROFILE_KEY)) || { name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0 };
-    if (p.v !== PROFILE_VERSION) {
-      p.v = PROFILE_VERSION;
-      p.seenLocal = p.seenLocal ?? false;
-      p.streakDays = p.streakDays ?? 0;
-      p.lastPlayDay = p.lastPlayDay ?? '';
-      p.daily = p.daily ?? { day: '', seed: 0, bestAlt: 0, plays: 0 };
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
-    }
+    // always fill defaults — self-healing even after a partially-migrated save
+    p.v = p.v ?? PROFILE_VERSION;
+    p.seenLocal = p.seenLocal ?? false;
+    p.streakDays = p.streakDays ?? 0;
+    p.lastPlayDay = p.lastPlayDay ?? '';
+    p.daily = p.daily ?? { day: '', seed: 0, bestAlt: 0, plays: 0 };
+    saveProfile(p);
     return p;
   } catch { return { v: PROFILE_VERSION, name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0, seenLocal: false, streakDays: 0, lastPlayDay: '', daily: { day: '', seed: 0, bestAlt: 0, plays: 0 } }; }
 }
-function saveProfile() { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); }
+function saveProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p ?? profile)); }
 
 /* deterministic daily seed — same questions for everyone on the same day */
 function dailySeed() {
