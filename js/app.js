@@ -874,7 +874,7 @@ $('#btn-board').onclick = () => {
 
 $('#btn-play').onclick = () => { sfx.click(); startMission(); };
 $('#mode-solo').onclick = () => { sfx.click(); startMission(); };
-$('#mode-daily').onclick = () => { sfx.click(); startMission('daily', dailySeed()); };
+$('#mode-daily').onclick = () => { console.log('[LUNSAD] DAILY clicked, seed=' + dailySeed()); sfx.click(); startMission('daily', dailySeed()); };
 $('#mode-map').onclick = () => { sfx.click(); openMap(); };
 $('#btn-map-close').onclick = () => $('#modal-map').classList.add('hidden');
 $('#btn-help-landing').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
