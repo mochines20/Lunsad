@@ -1670,3 +1670,64 @@ kbd {
 #mode-daily { border-color: rgba(87, 242, 175, 0.45); }
 #mode-daily:hover:not(.locked) { border-color: #57f2af; box-shadow: 6px 8px 0 rgba(0,0,0,0.45), 0 0 24px rgba(87,242,175,0.18); }
 #daily-sub { color: #9df2c8; }
+
+
+/* ============================================================
+   SHOP + DUO — modal styling
+   ============================================================ */
+.shop-panel { width: min(560px, 92vw); }
+.shop-balance {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin: 4px 0 14px;
+  display: flex; align-items: center; gap: 8px; justify-content: center;
+}
+.shop-balance .px-slot { width: 16px; }
+#shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  max-height: 46vh;
+  overflow-y: auto;
+  padding: 2px;
+  margin-bottom: 14px;
+}
+.shop-section {
+  grid-column: 1 / -1;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-dim);
+  margin-top: 6px;
+}
+.shop-card {
+  background: rgba(16, 23, 52, 0.9);
+  border: 2px solid var(--panel-edge);
+  color: var(--ink);
+  padding: 10px 6px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45);
+  transition: transform 0.12s ease, border-color 0.12s ease;
+}
+.shop-card:hover { transform: translateY(-2px); border-color: var(--cyan); }
+.shop-card.equipped { border-color: var(--gold); box-shadow: 3px 3px 0 rgba(0,0,0,0.45), 0 0 14px rgba(255, 209, 102, 0.35); }
+.shop-card.cant-afford { opacity: 0.55; }
+.shop-card.deny { animation: screenThump 0.35s ease-out; border-color: var(--red); }
+.shop-preview { height: 56px; display: flex; align-items: center; }
+.shop-ship-svg { width: 44px; }
+.shop-name { font-family: var(--font-pixel); font-size: 8px; letter-spacing: 1px; }
+.shop-price { font-family: var(--font-mono); font-size: 10px; color: var(--gold); }
+.shop-card.equipped .shop-price { color: #57f2af; }
+
+.duo-score { font-family: var(--font-pixel); font-size: 12px; color: var(--ink); margin: 10px 0 4px; }
+.duo-score b { color: var(--gold); }
+.duo-hint { font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); margin-bottom: 18px; }
+
+/* DUO card accent */
+#mode-duo { border-color: rgba(201, 92, 255, 0.45); }
+#mode-duo:hover { border-color: #c95cff; box-shadow: 6px 8px 0 rgba(0,0,0,0.45), 0 0 24px rgba(201,92,255,0.18); }
+#mode-shop { border-color: rgba(255, 209, 102, 0.4); }
+#mode-shop:hover { border-color: var(--gold); box-shadow: 6px 8px 0 rgba(0,0,0,0.45), 0 0 24px rgba(255,209,102,0.18); }

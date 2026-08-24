@@ -1,21 +1,21 @@
 /* LUNSAD — Game Data: zones, question bank, location facts */
 
 const ZONES = [
-  { id: 'earth', name: 'EARTH', tag: 'LAUNCH SITE', alt: 0, span: 1400,
+  { id: 'earth', name: 'EARTH', tag: 'LAUNCH SITE', alt: 0, span: 1400, mult: 1.0,
     skyTop: '#ffb45e', skyBottom: '#5ea8ff', label: 'Earth', icon: '🌍', factPool: 'earth' },
-  { id: 'clouds', name: 'CLOUD LEVEL', tag: 'TROPOSPHERE', alt: 1400, span: 1600,
+  { id: 'clouds', name: 'CLOUD LEVEL', tag: 'TROPOSPHERE', alt: 1400, span: 1600, mult: 1.0,
     skyTop: '#7ec3ff', skyBottom: '#bfe6ff', label: 'Clouds', icon: '☁️', factPool: 'clouds' },
-  { id: 'atmosphere', name: 'SKY LEVEL', tag: 'UPPER ATMOSPHERE', alt: 3000, span: 1800,
+  { id: 'atmosphere', name: 'SKY LEVEL', tag: 'UPPER ATMOSPHERE', alt: 3000, span: 1800, mult: 1.0,
     skyTop: '#3f7fd9', skyBottom: '#8fc4f5', label: 'Atmosphere', icon: '🌤️', factPool: 'atmosphere' },
-  { id: 'stratosphere', name: 'STRATOSPHERE', tag: 'JETSTREAM', alt: 4800, span: 2000,
+  { id: 'stratosphere', name: 'STRATOSPHERE', tag: 'JETSTREAM', alt: 4800, span: 2000, mult: 1.1,
     skyTop: '#1d3f8f', skyBottom: '#4a6fd0', label: 'Stratosphere', icon: '🌌', factPool: 'stratosphere' },
-  { id: 'orbit', name: 'ORBIT', tag: 'LOW EARTH ORBIT', alt: 6800, span: 2200,
+  { id: 'orbit', name: 'ORBIT', tag: 'LOW EARTH ORBIT', alt: 6800, span: 2200, mult: 1.2,
     skyTop: '#0b1030', skyBottom: '#1d2a66', label: 'Orbit', icon: '🛰️', factPool: 'orbit' },
-  { id: 'moon', name: 'THE MOON', tag: 'LUNAR APPROACH', alt: 9000, span: 2400,
+  { id: 'moon', name: 'THE MOON', tag: 'LUNAR APPROACH', alt: 9000, span: 2400, mult: 1.35,
     skyTop: '#05060f', skyBottom: '#141a38', label: 'Moon', icon: '🌙', factPool: 'moon' },
-  { id: 'deepspace', name: 'DEEP SPACE', tag: 'INTERPLANETARY', alt: 11400, span: 2600,
+  { id: 'deepspace', name: 'DEEP SPACE', tag: 'INTERPLANETARY', alt: 11400, span: 2600, mult: 1.5,
     skyTop: '#0a0518', skyBottom: '#1a0f33', label: 'Deep Space', icon: '🪐', factPool: 'deepspace' },
-  { id: 'galaxy', name: 'THE GALAXY', tag: 'FINAL FRONTIER', alt: 14000, span: 3000,
+  { id: 'galaxy', name: 'THE GALAXY', tag: 'FINAL FRONTIER', alt: 14000, span: 3000, mult: 1.75,
     skyTop: '#12041f', skyBottom: '#2b0f4d', label: 'Galaxy', icon: '🌠', factPool: 'galaxy' }
 ];
 
@@ -210,6 +210,25 @@ const SHIP_BODY = [
   ".KbbKWWKKKKKWWKbbK.",
   "..KK.KKKKKKKKK.KK.."
 ];
+
+/* ============================================================
+   SHOP — ship skins (body colors) and engine trails (flame colors).
+   Each entry is a palette override merged on top of PAL at render time.
+   ============================================================ */
+const SHIP_SKINS = {
+  classic: { name: 'CLASSIC', cost: 0,    pal: {} },
+  crimson: { name: 'CRIMSON', cost: 500,  pal: { W: '#ff9d9d', w: '#d97a7a', B: '#a03030', b: '#7a2222', R: '#ffd23f' } },
+  emerald: { name: 'EMERALD', cost: 900,  pal: { W: '#a8f0c8', w: '#7cc79d', B: '#2d8f5a', b: '#1f6b42', R: '#ff8c1a' } },
+  royal:   { name: 'ROYAL',   cost: 1400, pal: { W: '#c9b8ff', w: '#a08fd9', B: '#5a3dbf', b: '#412c8f', R: '#ffd23f' } },
+  gold:    { name: 'GOLD',    cost: 2200, pal: { W: '#ffe9b0', w: '#d9b878', B: '#c9922a', b: '#9a6e1c', R: '#ff4d4d' } }
+};
+const SHIP_TRAILS = {
+  flame:  { name: 'FLAME',  cost: 0,    pal: {} },
+  ion:    { name: 'ION',    cost: 300,  pal: { O: '#57c9f2', Y: '#bffaff' } },
+  plasma: { name: 'PLASMA', cost: 600,  pal: { O: '#c95cff', Y: '#f0c8ff' } },
+  solar:  { name: 'SOLAR',  cost: 900,  pal: { O: '#ffe95e', Y: '#fff7c8' } },
+  toxic:  { name: 'TOXIC',  cost: 1500, pal: { O: '#7dff5a', Y: '#d8ffc8' } }
+};
 
 const PXART = {
   ship: { w: 20, flameFrom: 20, rows: SHIP_BODY.concat([
@@ -545,13 +564,14 @@ PAL.K2 = '#3a4664';
 /* render any PXICON art as inline svg (reuses px()) */
 function pxIcon(name, cls = '') { return px(PXICON[name], cls); }
 
-/* render pixel art to an inline SVG string; merges horizontal runs */
-function px(art, cls = '') {
+/* render pixel art to an inline SVG string; merges horizontal runs.
+   pal overrides the global palette (ship skins / engine trails in the shop). */
+function px(art, cls = '', pal = PAL) {
   const body = [], flame = [];
   art.rows.forEach((row, y) => {
     let x = 0;
     while (x < row.length) {
-      const col = PAL[row[x]];
+      const col = pal[row[x]];
       if (!col) { x++; continue; }
       let run = 1;
       while (x + run < row.length && row[x + run] === row[x]) run++;

@@ -33,11 +33,76 @@ function loadProfile() {
     p.streakDays = p.streakDays ?? 0;
     p.lastPlayDay = p.lastPlayDay ?? '';
     p.daily = p.daily ?? { day: '', seed: 0, bestAlt: 0, plays: 0 };
+    p.ownedShips = p.ownedShips ?? ['classic'];
+    p.ownedTrails = p.ownedTrails ?? ['flame'];
+    p.ship = p.ship ?? 'classic';
+    p.trail = p.trail ?? 'flame';
     saveProfile(p);
     return p;
-  } catch { return { v: PROFILE_VERSION, name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0, seenLocal: false, streakDays: 0, lastPlayDay: '', daily: { day: '', seed: 0, bestAlt: 0, plays: 0 } }; }
+  } catch { return { v: PROFILE_VERSION, name: '', avatar: '👨‍🚀', dust: 0, bestAlt: 0, seenLocal: false, streakDays: 0, lastPlayDay: '', daily: { day: '', seed: 0, bestAlt: 0, plays: 0 }, ownedShips: ['classic'], ownedTrails: ['flame'], ship: 'classic', trail: 'flame' }; }
 }
 function saveProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p ?? profile)); }
+
+/* ============================================================
+   SHIP CUSTOMIZATION — apply owned skin + trail to every ship render
+   ============================================================ */
+function shipPal() {
+  return { ...PAL, ...(SHIP_SKINS[profile.ship]?.pal || {}), ...(SHIP_TRAILS[profile.trail]?.pal || {}) };
+}
+function renderShips() {
+  const pal = shipPal();
+  $$('[data-px="ship"]').forEach(el => { el.innerHTML = px(PXART.ship, el.dataset.cls || 'ship-svg', pal); });
+}
+
+/* ---------------- shop ---------------- */
+function openShop() {
+  $('#shop-dust').textContent = profile.dust.toLocaleString();
+  buildShopGrid();
+  $('#modal-shop').classList.remove('hidden');
+}
+
+function buildShopGrid() {
+  const grid = $('#shop-grid');
+  grid.innerHTML = '';
+  const section = (title) => {
+    const h = document.createElement('div');
+    h.className = 'shop-section';
+    h.textContent = title;
+    grid.appendChild(h);
+  };
+  section('🚀 SHIPS');
+  Object.entries(SHIP_SKINS).forEach(([id, s]) => grid.appendChild(shopCard('ship', id, s)));
+  section('🔥 TRAILS');
+  Object.entries(SHIP_TRAILS).forEach(([id, t]) => grid.appendChild(shopCard('trail', id, t)));
+}
+
+function shopCard(kind, id, item) {
+  const ownedList = kind === 'ship' ? profile.ownedShips : profile.ownedTrails;
+  const equipped = kind === 'ship' ? profile.ship === id : profile.trail === id;
+  const owned = ownedList.includes(id);
+  const el = document.createElement('button');
+  el.className = 'shop-card' + (equipped ? ' equipped' : '') + (!owned && profile.dust < item.cost ? ' cant-afford' : '');
+  const previewPal = { ...PAL, ...(kind === 'ship' ? item.pal : {}), ...(kind === 'trail' ? item.pal : {}) };
+  el.innerHTML = `
+    <span class="shop-preview">${px(PXART.ship, 'shop-ship-svg', previewPal)}</span>
+    <span class="shop-name">${item.name}</span>
+    <span class="shop-price">${equipped ? 'EQUIPPED' : owned ? 'OWNED' : '✨ ' + item.cost.toLocaleString()}</span>`;
+  el.onclick = () => {
+    if (equipped) return;
+    if (!owned) {
+      if (profile.dust < item.cost) { sfx.wrong(); el.classList.add('deny'); setTimeout(() => el.classList.remove('deny'), 400); return; }
+      profile.dust -= item.cost;
+      ownedList.push(id);
+      sfx.correct();
+    } else sfx.click();
+    if (kind === 'ship') profile.ship = id; else profile.trail = id;
+    saveProfile();
+    renderShips();
+    $('#shop-dust').textContent = profile.dust.toLocaleString();
+    buildShopGrid();
+  };
+  return el;
+}
 
 /* deterministic daily seed — same questions for everyone on the same day */
 function dailySeed() {
@@ -394,12 +459,17 @@ function drawQuestions(seed) {
   return [...pick(by(1), 3), ...pick(by(2), 4), ...pick(by(3), 3)];
 }
 
+function startDuo() {
+  G.duo = { seed: Math.floor(Math.random() * 0x7fffffff), stage: 0, p1Alt: 0 };
+  startMission('duo', G.duo.seed);
+}
+
 function startMission(mode, seed) {
   Object.assign(G, {
     active: true, altitude: 0, energy: TUNING.startEnergy, dust: 0,
     streak: 0, maxStreak: 0, correct: 0, qIndex: 0,
     mode: mode || 'solo',
-    questions: drawQuestions(mode === 'daily' ? seed : undefined),
+    questions: drawQuestions((mode === 'daily' || mode === 'duo') ? seed : undefined),
     boosts: { radar: 2, scan: 2, boost: 1, shield: 1, warp: 1 },
     armed: { boost: false, shield: false },
     charged: false,
@@ -422,7 +492,7 @@ function startMission(mode, seed) {
   $('#fact-toast').classList.add('hidden');
 
   runCountdown(() => {
-    readout('🚀 LIFTOFF', 'good');
+    readout(G.mode === 'duo' ? `🚀 PILOT ${G.duo.stage + 1} — LIFTOFF` : '🚀 LIFTOFF', 'good');
     sfx.launch();
     $('#ship').classList.add('thrusting');
     setAltitude(260);
@@ -496,11 +566,12 @@ function startTimer() {
   bar.classList.remove('low');
   bar.style.width = '100%';
   let lastTickSecond = -1;
+  const tickAt = (zoneAt(G.altitude).mult || 1) >= 1.2 ? 14 : 10; // deep zones feel tenser
   G.timer = setInterval(() => {
     G.timeLeft -= 0.1;
     bar.style.width = Math.max(0, (G.timeLeft / TUNING.questionTime) * 100) + '%';
     bar.classList.toggle('low', G.timeLeft <= 8);
-    if (G.timeLeft <= 10 && G.timeLeft > 0) { // audible urgency in the final stretch
+    if (G.timeLeft <= tickAt && G.timeLeft > 0) { // audible urgency in the final stretch
       const sec = Math.floor(G.timeLeft);
       if (sec !== lastTickSecond) { lastTickSecond = sec; sfx.tick(); }
     }
@@ -538,7 +609,8 @@ function answer(i) {
 function onCorrect(q) {
   const mult = (G.armed.boost ? 2 : 1);
   const streakBonus = 1 + 0.1 * Math.min(G.streak, 5);
-  const gain = Math.round(TUNING.thrust[q.d] * mult * streakBonus);
+  const zoneMult = zoneAt(G.altitude).mult || 1;
+  const gain = Math.round(TUNING.thrust[q.d] * mult * streakBonus * zoneMult);
   G.armed.boost = false;
   $$('.boost-btn').forEach(b => b.classList.remove('armed'));
 
@@ -754,6 +826,18 @@ function endMission(completed) {
     if (G.correct === TUNING.roundSize) dustEarned += TUNING.dust.perfect;
   }
 
+  // DUO: pilot 1 finishing hands off to pilot 2 instead of results
+  if (G.mode === 'duo' && G.duo.stage === 0) {
+    G.duo.p1Alt = finalAlt;
+    G.duo.stage = 1;
+    profile.dust += dustEarned;
+    profile.bestAlt = Math.max(profile.bestAlt, finalAlt);
+    saveProfile();
+    $('#duo-p1-alt').textContent = fmtAlt(finalAlt);
+    setTimeout(() => $('#modal-duo').classList.remove('hidden'), 700);
+    return;
+  }
+
   const isRecord = completed && finalAlt > profile.bestAlt;
   profile.dust += dustEarned;
   profile.bestAlt = Math.max(profile.bestAlt, finalAlt);
@@ -773,7 +857,20 @@ function endMission(completed) {
   $('#results-title').textContent = completed
     ? `YOU REACHED ${zone.name}`
     : 'YOUR SHIP RAN OUT OF ENERGY';
-  $('#results-record').classList.toggle('hidden', !isRecord);
+  // DUO final: winner headline + scoreboard reuse of the record badge
+  if (G.mode === 'duo') {
+    const p1 = G.duo.p1Alt, p2 = finalAlt;
+    const winner = p1 === p2 ? 'IT\u2019S A DRAW!' : (p2 > p1 ? 'PILOT 2 WINS!' : 'PILOT 1 WINS!');
+    $('#results-eyebrow').textContent = 'DUO SHOWDOWN';
+    $('#results-title').textContent = winner;
+    $('#results-record').textContent = `P1 ${fmtAlt(p1)}  ·  P2 ${fmtAlt(p2)}`;
+    $('#results-record').classList.remove('hidden');
+    if (p2 > p1) profile.dust += 50; // winner bonus
+    saveProfile();
+  } else {
+    $('#results-record').textContent = '★ NEW RECORD ★';
+    $('#results-record').classList.toggle('hidden', !isRecord);
+  }
   const grades = [[10, 'S'], [8, 'A'], [6, 'B'], [4, 'C'], [0, 'D']];
   $('#results-grade').textContent = grades.find(([min]) => G.correct >= min)[1];
   $('#res-correct').textContent = `${G.correct}/${TUNING.roundSize}`;
@@ -864,12 +961,68 @@ $('#btn-board').onclick = () => {
 $('#btn-play').onclick = () => { sfx.click(); startMission(); };
 $('#mode-solo').onclick = () => { sfx.click(); startMission(); };
 $('#mode-daily').onclick = () => { sfx.click(); startMission('daily', dailySeed()); };
+$('#mode-duo').onclick = () => { sfx.click(); startDuo(); };
+$('#mode-shop').onclick = () => { sfx.click(); openShop(); };
+$('#btn-shop-close').onclick = () => { sfx.click(); $('#modal-shop').classList.add('hidden'); };
+$('#btn-duo-p2').onclick = () => { sfx.click(); $('#modal-duo').classList.add('hidden'); startMission('duo', G.duo.seed); };
 $('#mode-map').onclick = () => { sfx.click(); openMap(); };
 $('#btn-map-close').onclick = () => $('#modal-map').classList.add('hidden');
 $('#btn-help-landing').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
 $('#btn-help-hangar').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
 $('#btn-help-close').onclick = () => { sfx.click(); $('#modal-help').classList.add('hidden'); };
+/* ---------------- shareable result card (canvas PNG) ---------------- */
+function shareResultCard() {
+  sfx.click();
+  const W = 480, H = 640;
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#0a0f28'); grad.addColorStop(1, '#05060f');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+  // pixel stars
+  for (let i = 0; i < 60; i++) {
+    ctx.fillStyle = Math.random() < 0.7 ? '#ffffff' : '#ffe6c4';
+    ctx.globalAlpha = 0.25 + Math.random() * 0.7;
+    ctx.fillRect(Math.random() * W, Math.random() * H, 2, 2);
+  }
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = '#ffb45e'; ctx.lineWidth = 4; ctx.strokeRect(10, 10, W - 20, H - 20);
+
+  // ship with the player's actual skin + trail
+  const pal = shipPal();
+  const scale = 6, shipW = PXART.ship.w * scale;
+  PXART.ship.rows.forEach((row, y) => {
+    [...row].forEach((ch, x) => {
+      const col = pal[ch];
+      if (!col) return;
+      ctx.fillStyle = col;
+      ctx.fillRect((W - shipW) / 2 + x * scale, 90 + y * scale, scale, scale);
+    });
+  });
+
+  const center = (text, y, font, color) => {
+    ctx.font = font; ctx.fillStyle = color; ctx.textAlign = 'center';
+    ctx.fillText(text, W / 2, y);
+  };
+  center('LUNSAD', 60, 'bold 28px "Press Start 2P", monospace', '#ffb45e');
+  center($('#results-title').textContent, 300, 'bold 15px "Press Start 2P", monospace', '#eef2ff');
+  center('GRADE', 345, '12px "Press Start 2P", monospace', '#8fa3d9');
+  center($('#results-grade').textContent, 430, 'bold 72px "Press Start 2P", monospace', '#ffd166');
+  center(`ALTITUDE  ${$('#res-alt').textContent}`, 480, '13px "Press Start 2P", monospace', '#2fd6ff');
+  center(`CORRECT  ${$('#res-correct').textContent}    STREAK  ${$('#res-streak').textContent}`, 512, '11px "Press Start 2P", monospace', '#eef2ff');
+  center(`STARDUST  ${$('#res-dust').textContent}`, 544, '13px "Press Start 2P", monospace', '#ffd166');
+  center(`${(profile.name || 'Pilot').toUpperCase()}  ·  ${new Date().toISOString().slice(0, 10)}`, 596, '10px "Press Start 2P", monospace', '#8fa3d9');
+
+  const a = document.createElement('a');
+  a.download = `lunsad-${Date.now()}.png`;
+  a.href = cv.toDataURL('image/png');
+  a.click();
+}
+
 $('#btn-again').onclick = () => { sfx.click(); startMission(); };
+$('#btn-share').onclick = () => shareResultCard();
 $('#btn-hangar').onclick = () => { sfx.click(); goHangar(); };
 $('#btn-abandon').onclick = () => { clearInterval(G.timer); stopAmbient(); G.active = false; $('#vignette').classList.remove('danger'); goHangar(); };
 $$('.boost-btn').forEach(b => b.onclick = () => useBoost(b.dataset.boost));
@@ -884,6 +1037,9 @@ document.addEventListener('keydown', e => {
 
   if (k === 'escape' && !$('#modal-help').classList.contains('hidden')) {
     $('#modal-help').classList.add('hidden'); return;
+  }
+  if (k === 'escape' && !$('#modal-shop').classList.contains('hidden')) {
+    $('#modal-shop').classList.add('hidden'); return;
   }
   if (k === 'escape' && !$('#modal-map').classList.contains('hidden')) {
     $('#modal-map').classList.add('hidden'); return;
@@ -909,6 +1065,7 @@ document.addEventListener('keydown', e => {
 
 /* init */
 $$('[data-px]').forEach(el => { el.innerHTML = px(PXART[el.dataset.px], el.dataset.cls || ''); });
+renderShips(); // re-skin any ship renders with the player's owned skin + trail
 $$('[data-icn]').forEach(el => { el.innerHTML = pxIcon(el.dataset.icn, 'px-icn'); });
 
 function renderEnergy() {

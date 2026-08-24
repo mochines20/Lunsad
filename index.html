@@ -95,7 +95,8 @@
     <div class="hangar-modes">
       <button class="mode-card" id="mode-solo"><span class="mode-icon px-slot" data-icn="rocket"></span><span>SOLO</span><em>10 questions · 3 energy</em></button>
       <button class="mode-card" id="mode-daily"><span class="mode-icon px-slot" data-icn="scan"></span><span>DAILY</span><em id="daily-sub">seed of the day</em></button>
-      <button class="mode-card locked" id="mode-duo" disabled><b class="lock-badge">LOCKED</b><span class="mode-icon px-slot" data-icn="medalS"></span><span>DUO</span><em>coming soon</em></button>
+      <button class="mode-card" id="mode-duo"><span class="mode-icon px-slot" data-icn="medalS"></span><span>DUO</span><em>2 pilots · 1 ship each</em></button>
+      <button class="mode-card" id="mode-shop"><span class="mode-icon px-slot" data-icn="dust"></span><span>SHOP</span><em>ships · trails</em></button>
       <button class="mode-card" id="mode-map"><span class="mode-icon px-slot" data-icn="radar"></span><span>FLIGHT MAP</span><em>see the journey</em></button>
     </div>
     <p id="local-save-note">💾 Progress saves to this device only — cloud sync coming soon.</p>
@@ -194,6 +195,28 @@
   </div>
 </div>
 
+<!-- ============ SHOP MODAL ============ -->
+<div id="modal-shop" class="modal hidden">
+  <div class="modal-card panel shop-panel">
+    <p class="panel-eyebrow">STARSHIP OUTFITTER</p>
+    <h2 class="modal-title">SHOP</h2>
+    <div class="shop-balance"><span class="px-slot" data-icn="dust"></span> <b id="shop-dust">0</b> STARDUST</div>
+    <div id="shop-grid"></div>
+    <button class="btn btn-ghost" id="btn-shop-close">CLOSE</button>
+  </div>
+</div>
+
+<!-- ============ DUO INTERSTITIAL ============ -->
+<div id="modal-duo" class="modal hidden">
+  <div class="modal-card panel">
+    <p class="panel-eyebrow">DUO SHOWDOWN</p>
+    <h2 class="modal-title" id="duo-title">PILOT 1 DONE</h2>
+    <p class="duo-score">P1 REACHED <b id="duo-p1-alt">0m</b></p>
+    <p class="duo-hint">Same seed. Same questions. Beat that altitude.</p>
+    <button class="btn btn-primary btn-xl" id="btn-duo-p2">🚀 PILOT 2 — LAUNCH</button>
+  </div>
+</div>
+
 <!-- ============ RESULTS ============ -->
 <section id="screen-results" class="screen">
   <div class="landing-stars"></div>
@@ -210,6 +233,7 @@
     </div>
     <div class="results-actions">
       <button class="btn btn-primary" id="btn-again"><span class="px-slot" data-icn="rocket"></span> FLY AGAIN</button>
+      <button class="btn btn-ghost" id="btn-share">📸 SHARE</button>
       <button class="btn btn-ghost" id="btn-hangar"><span class="px-slot" data-icn="home"></span> HANGAR</button>
     </div>
   </div>
