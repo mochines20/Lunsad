@@ -9,16 +9,6 @@
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 
-/* surface errors as visible DOM to ease blind debugging in restricted environments */
-window.onerror = (msg, src, line, col) => {
-  const el = document.createElement('div');
-  el.id = 'debug-error';
-  el.textContent = `⚠️ ${msg} @${src.split('/').pop()}:${line}:${col}`;
-  el.style.cssText = 'position:fixed;top:4px;left:4px;z-index:9999;color:#ff5c7a;font:11px/1.4 monospace;background:rgba(0,0,0,.85);padding:4px 8px;border:1px solid #ff5c7a;max-width:90vw;';
-  document.body.appendChild(el);
-  return true;
-};
-
 /* ---------------- persistence ---------------- */
 const PROFILE_KEY = 'lunsad_profile';
 const PROFILE_VERSION = 2; // bump when the profile schema changes
@@ -873,14 +863,7 @@ $('#btn-board').onclick = () => {
 
 $('#btn-play').onclick = () => { sfx.click(); startMission(); };
 $('#mode-solo').onclick = () => { sfx.click(); startMission(); };
-$('#mode-daily').onclick = () => {
-  const dbg = document.createElement('div');
-  dbg.id = 'debug-error';
-  dbg.textContent = 'DAILY click → seed=' + dailySeed() + ' mode=' + 'daily';
-  dbg.style.cssText = 'position:fixed;bottom:10px;left:10px;z-index:9999;color:#57f2af;font:11px/1.4 monospace;background:rgba(0,0,0,.9);padding:6px 10px;border:1px solid #57f2af;max-width:90vw;';
-  document.body.appendChild(dbg);
-  sfx.click(); startMission('daily', dailySeed());
-};
+$('#mode-daily').onclick = () => { sfx.click(); startMission('daily', dailySeed()); };
 $('#mode-map').onclick = () => { sfx.click(); openMap(); };
 $('#btn-map-close').onclick = () => $('#modal-map').classList.add('hidden');
 $('#btn-help-landing').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
