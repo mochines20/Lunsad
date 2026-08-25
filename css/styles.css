@@ -2558,7 +2558,7 @@ kbd {
    8BIT_CLOUD REDESIGN — pixel infrastructure layout
    Matches the reference: dark grid, neon cards, quest track
    ============================================================ */
-.bit-layout { width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important; background: #0f0f14; }
+.bit-layout { width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important; background: transparent !important; }
 .bit-layout .bit-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 24px; background: #0a0a0f; border-bottom: 2px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 20; }
 .bit-logo { font: 11px var(--font-pixel); color: #fff; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
 .bit-logo i { display: block; width: 14px; height: 14px; background: #ff2a6d; box-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
@@ -2578,7 +2578,7 @@ kbd {
 .bit-btn-lg { padding: 14px 20px; font-size: 10px; }
 .bit-btn-block { width: 100%; }
 
-.bit-hero { text-align: center; padding: 80px 24px 60px; background: #1a1a2e; position: relative; overflow: hidden; border-bottom: 2px solid rgba(255,255,255,0.06); }
+.bit-hero { text-align: center; padding: 80px 24px 60px; background: transparent; position: relative; overflow: visible; border-bottom: 2px solid rgba(255,255,255,0.06); }
 .bit-hero::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.3; pointer-events: none; }
 .bit-hero-pixel-accent { position: absolute; left: 50%; top: 68px; width: 120px; height: 120px; background: #ff2a6d; opacity: 0.15; transform: translateX(-10%); clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 60%, 60% 100%, 0 100%); pointer-events: none; }
 .bit-eyebrow { font: 8px var(--font-mono); letter-spacing: 2px; color: #8a8fa8; margin-bottom: 24px; position: relative; }
@@ -2653,15 +2653,26 @@ kbd {
 .bit-avatar { width: 40px; height: 40px; background: #1e1e32; border: 2px solid #00a8ff; display: grid; place-items: center; font-size: 20px; flex-shrink: 0; box-shadow: 3px 3px 0 rgba(0,0,0,0.4); }
 .bit-avatar.bg-yellow { background: #f9d423; border-color: #f9d423; }
 .bit-bubble { flex: 0 1 520px; width: 100%; padding: 16px; position: relative; border: 2px solid rgba(255,255,255,0.1); max-width: 520px; margin: 0 auto; }
-.bit-bubble-blue { background: #1e3a8a; border-color: #00a8ff; }
+.bit-bubble-blue { background: #1e3a8a; border-color: #00a8ff; text-align: center; }
+.bit-bubble-blue .bit-bubble-meta { text-align: center; }
 .bit-bubble-dark { background: #1e1e32; border-color: rgba(255,255,255,0.08); }
 .bit-bubble-meta { font: 7px var(--font-pixel); color: #05ffa1; letter-spacing: 1px; display: block; margin-bottom: 8px; }
 .bit-bubble p { font: 11px/1.6 var(--font-mono); color: #cbd5e1; }
 .bit-bubble p em { color: #f9d423; font-style: normal; }
-.bit-bubble-action { margin-top: 12px; width: 100%; background: #0f172a; border: 2px dashed rgba(5,255,161,0.3); padding: 12px; display: flex; justify-content: space-between; align-items: center; color: #05ffa1; font: 8px var(--font-pixel); }
-.bit-bubble-action .story-alien, .bit-bubble-action .story-cow { position: static !important; transform: none !important; width: 48px !important; height: auto !important; }
-.bit-bubble-action .story-alien .px { width: 48px !important; height: 48px !important; }
-.bit-bubble-action .story-cow .px { width: 48px !important; height: 48px !important; }
+.bit-bubble-action { margin-top: 16px; width: 100%; background: #0a0f1e; background-image: radial-gradient(1px 1px at 18% 22%, rgba(255,255,255,0.12) 50%, transparent 51%), radial-gradient(1.2px 1.2px at 82% 38%, rgba(255,255,255,0.08) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 50% 85%, rgba(5,255,161,0.12) 50%, transparent 51%), linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: auto, auto, auto, 20px 20px, 20px 20px; border: 3px solid #1e3a5a; box-shadow: 6px 6px 0 rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.04); padding: 36px 24px 16px; display: flex; justify-content: space-around; align-items: center; gap: 24px; min-height: 148px; position: relative; overflow: hidden; }
+.bit-bubble-action::before { content: '✦'; position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); font: 14px var(--font-pixel); color: #f9d423; text-shadow: 0 0 12px rgba(249,212,35,0.6); animation: sparkPulse 1.4s ease-in-out infinite; pointer-events: none; }
+@keyframes sparkPulse { 0%,100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); } }
+.bit-bubble-action .encounter-label { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #05ffa1; color: #0a1a0f; padding: 5px 10px; font: 7px var(--font-pixel); letter-spacing: 1px; box-shadow: 3px 3px 0 rgba(0,0,0,0.35); white-space: nowrap; }
+.bit-bubble-action .story-alien, .bit-bubble-action .story-cow { position: static !important; width: 64px !important; height: auto !important; justify-self: center; filter: drop-shadow(0 0 10px rgba(0,0,0,0.3)); }
+.bit-bubble-action .story-alien { animation: alienFloat 3s ease-in-out infinite; }
+.bit-bubble-action .story-cow { animation: cowFloat 3.2s ease-in-out infinite 0.4s; }
+.bit-bubble-action .story-alien .px { width: 64px !important; height: 64px !important; }
+.bit-bubble-action .story-cow .px { width: 64px !important; height: 64px !important; }
+@keyframes alienFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes cowFloat { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-5px) rotate(1deg); } }
+.bit-bubble .story-caption { text-align: center !important; margin-top: 14px !important; padding: 8px 12px !important; background: rgba(0,0,0,0.25) !important; border: 1px solid rgba(255,255,255,0.08) !important; }
+.bit-bubble .story-caption b { color: #f9d423 !important; font: 10px var(--font-pixel) !important; letter-spacing: 1px !important; display: block !important; margin-bottom: 4px !important; text-shadow: 1px 1px 0 rgba(0,0,0,0.6) !important; }
+.bit-bubble .story-caption span { color: #e2e8f0 !important; font: 9px var(--font-mono) !important; letter-spacing: 1px !important; }
 
 .bit-gear-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; max-width: 900px; margin: 0 auto; position: relative; }
 .bit-gear-card { background: #1e1e32; border: 2px solid rgba(255,255,255,0.08); padding: 20px 16px; text-align: center; position: relative; box-shadow: 4px 4px 0 rgba(0,0,0,0.4); }
@@ -2743,3 +2754,8 @@ kbd {
 .bit-hero { padding: 72px 24px 56px !important; }
 .bit-title { text-shadow: 4px 4px 0 #000, 0 0 20px rgba(0,0,0,0.8) !important; letter-spacing: 1px !important; }
 .bit-hero-pixel-accent { opacity: 0.08 !important; }
+
+/* planet removed per feedback — keep hero text clean */
+#planet-anchor { display: none !important; }
+.bit-hero { background: transparent !important; overflow: visible !important; position: relative; z-index: 2; }
+#screen-landing .landing-ship { left: auto !important; right: 10% !important; top: auto !important; bottom: 12vh !important; transform: none !important; width: 56px !important; z-index: 2 !important; opacity: 0.95 !important; display: block !important; }
