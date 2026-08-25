@@ -2,37 +2,177 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>LUNSAD — Launch Your Knowledge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/styles.css?v=20260837">
 </head>
 <body>
+
+<!-- Persistent inline pixel planet: intentionally body-level so it survives every landing section. -->
+<div id="planet-anchor" aria-hidden="true">
+  <svg class="planet-svg" viewBox="0 0 320 240" shape-rendering="crispEdges" focusable="false">
+    <defs><g id="planet-art">
+      <path fill="#10181f" d="M24 224V152h8v-32h8V96h16V72h16V56h24V40h32V32h80v8h32v16h24v16h16v24h16v24h8v32h8v72Z"/>
+      <path fill="#176a82" d="M24 32h272v192H24Z"/><path fill="#2b9db0" d="M24 80h32V64h40v8h24v16h32v24h24v32h24v24h24v56H24Z"/>
+      <path fill="#126076" d="M208 32h88v192h-48v-32h-24v-32h-16v-40h-16V96h16Z"/>
+      <path fill="#c8ff4d" d="M48 80h24V64h24v8h24v16h16v24h16v16h24v24h-16v16h-24v16H96v16H72v-16H48v-24H32v-24h16Z"/>
+      <path fill="#71b83f" d="M40 104h24V88h32v16h24v16h16v24h-16v16H96v16H72v-16H48v-24H40Z"/>
+      <path fill="#dfffb0" d="M72 64h24v8h24v8h16v8H96v8H72v8H48V88h24Z"/>
+      <path fill="#75c8d0" d="M176 56h24v8h24v16h24v16h16v16h-32v-8h-24V88h-32Z"/>
+      <path fill="#c8ff4d" d="M232 112h32v16h16v24h-24v16h-24v-24h-16v-16h16Z"/>
+      <path fill="#e6f5d0" d="M136 120h24v8h16v16h-16v8h-24v-8h-16v-16h16Z"/>
+      <path fill="#0d4c62" d="M32 184h40v16h24v24H32ZM176 176h32v16h24v32h-56ZM256 192h40v32h-40Z"/>
+      <path fill="#f0f4dd" d="M40 152h16v8h24v8H56v8H40ZM208 72h16v8h16v8h-24v8h-16v-8h8Z"/>
+      <g fill="#9fdc57"><rect x="56" y="104" width="8" height="8"/><rect x="80" y="88" width="8" height="8"/><rect x="104" y="136" width="8" height="8"/><rect x="128" y="168" width="8" height="8"/><rect x="240" y="152" width="8" height="8"/><rect x="264" y="104" width="8" height="8"/></g>
+      <path fill="#c8ff4d" d="M32 224h248v8H32ZM40 216h16v8H40ZM264 216h16v8h-16Z"/>
+    </g></defs>
+    <g class="planet-frame is-active"><use href="#planet-art"/></g><g class="planet-frame"><use href="#planet-art"/></g><g class="planet-frame"><use href="#planet-art"/></g><g class="planet-frame"><use href="#planet-art"/></g><g class="planet-frame"><use href="#planet-art"/></g><g class="planet-frame"><use href="#planet-art"/></g><g class="planet-frame"><use href="#planet-art"/></g><g class="planet-frame"><use href="#planet-art"/></g>
+  </svg>
+</div>
 
 <!-- ============ LANDING ============ -->
 <section id="screen-landing" class="screen active">
   <div class="landing-stars"></div>
-  <div class="landing-earth"><div data-px="earth"></div></div>
+  <div class="landing-particles">
+    <div class="landing-particle"></div>
+    <div class="landing-particle"></div>
+    <div class="landing-particle"></div>
+    <div class="landing-particle"></div>
+    <div class="landing-particle"></div>
+    <div class="landing-particle"></div>
+    <div class="landing-particle"></div>
+    <div class="landing-particle"></div>
+  </div>
+  <div class="landing-overlay"></div>
+  <div id="landing-ufo" class="landing-ufo" aria-hidden="true"><svg class="ufo-svg" viewBox="0 0 16 8" shape-rendering="crispEdges"><path fill="#182033" d="M6 0h4v1h2v1h2v1h1v2H1V3h1V2h2V1h2Z"/><path fill="#8fd4ff" d="M5 2h6v1h2v1H3V3h2Z"/><path fill="#ffd166" d="M4 5h8v1H4Zm2 1h4v1H6Z"/></svg></div>
   <div class="landing-ship" aria-hidden="true"><div data-px="shipSmoke" data-cls="ship-svg"></div></div>
-  <div class="landing-content">
-    <p class="landing-eyebrow">A KNOWLEDGE-POWERED SPACE ADVENTURE</p>
-    <h1 class="landing-logo">LUNSAD</h1>
-    <p class="landing-tagline">Launch Your Knowledge</p>
-    <p class="landing-sub">The higher you answer, the farther you go.<br>How high can you go?</p>
-    <div class="landing-actions">
-      <button class="btn btn-primary btn-lg" id="btn-launch-start"><span class="px-slot" data-icn="rocket"></span> START MISSION</button>
-    </div>
-    <div class="landing-auth">
-      <p class="auth-label">CONTINUE WITH</p>
-      <div class="auth-buttons">
-        <button class="btn btn-auth" data-auth="google">Google</button>
-        <button class="btn btn-auth" data-auth="apple">Apple</button>
-        <button class="btn btn-auth" data-auth="email"><span class="px-slot" data-icn="mail"></span> Email</button>
+  <div class="landing-content bit-layout">
+    <!-- TOP NAV — 8BIT_CLOUD style -->
+    <nav class="bit-nav">
+      <div class="bit-nav-left"><span class="bit-logo"><i></i> LUNSAD_CLOUD</span></div>
+      <div class="bit-nav-center"><a href="#" data-nav="docs">DOCS</a><a href="#" id="nav-pricing">SHOP</a><a href="#" id="nav-login">LOGIN</a></div>
+      <div class="bit-nav-right"><button class="bit-btn bit-btn-pink" id="btn-launch-start"><span class="px-slot" data-icn="rocket"></span> START GAME</button><button class="bit-hamburger" aria-label="Menu">≡</button></div>
+    </nav>
+
+    <!-- HERO — INFRASTRUCTURE FOR THE METAVERSE -->
+    <section class="bit-hero">
+      <div class="bit-hero-pixel-accent" aria-hidden="true"></div>
+      <p class="bit-eyebrow">✦ LUNSAD — TAGALOG FOR "TO LAUNCH" · EARTH NODE ✦</p>
+      <h1 class="bit-title">KNOWLEDGE<br>FOR<br><span class="t-green">THE COSMOS</span></h1>
+      <p class="bit-sub">Deploy your curiosity on the ultimate knowledge cloud.<br>Every correct answer is thrust. Every streak is orbit.</p>
+      <div class="hero-stats bit-hero-stats"><span>30 QUESTIONS</span><i>·</i><span>8 ZONES</span><i>·</i><span>DAILY SEED</span><i>·</i><span>PIXEL PERFECT</span></div>
+      <div class="bit-hero-actions">
+        <button class="bit-btn bit-btn-pink bit-btn-lg" id="btn-hero-insert"><span class="px-slot" data-icn="rocket"></span> INSERT COIN</button>
+        <button class="bit-btn bit-btn-outline" id="btn-help-landing">READ THE MANUAL</button>
       </div>
-    </div>
-    <button class="btn btn-ghost btn-help" id="btn-help-landing">? HOW TO PLAY</button>
+      <span class="bit-scroll-hint">SCROLL TO ENTER THE NETWORK <b>↓</b></span>
+    </section>
+
+    <!-- ALLIED GUILDS — 4 zones -->
+    <section class="bit-section bit-guilds">
+      <h2 class="bit-section-title t-green">ALLIED ZONES</h2>
+      <p class="bit-section-sub">Training with the legendary pilots across 8 altitudes.</p>
+      <div class="bit-grid-4">
+        <article class="bit-card"><div class="bit-card-icon bg-red"></div><h3>EARTH_NODE</h3><p class="bit-card-quote">"The runway where every pilot learns to breathe."</p><span class="bit-card-status">STATUS: GROUNDED · 0m</span></article>
+        <article class="bit-card"><div class="bit-card-icon bg-blue"></div><h3>ORBIT_LAB</h3><p class="bit-card-quote">"Zero-G, 28,000 km/h — 16 sunrises a day."</p><span class="bit-card-status">STATUS: ORBITAL · 6800m</span></article>
+        <article class="bit-card"><div class="bit-card-icon bg-yellow"></div><h3>MOON_PORT</h3><p class="bit-card-quote">"3.8cm farther every year — catch it if you can."</p><span class="bit-card-status">STATUS: LUNAR · 9000m</span></article>
+        <article class="bit-card"><div class="bit-card-icon bg-purple"></div><h3>GALAXY_CORE</h3><p class="bit-card-quote">"100B stars. One black hole. Your callsign on it."</p><span class="bit-card-status">STATUS: INTERSTELLAR · 14000m</span></article>
+      </div>
+    </section>
+
+    <!-- POWER-UPS — boosters -->
+    <section class="bit-section bit-powerups">
+      <h2 class="bit-section-title t-pink">⚡ POWER-UPS</h2>
+      <p class="bit-section-sub">Equip your ship with industry-leading tools.</p>
+      <div class="bit-grid-3">
+        <article class="bit-card bit-card-power"><span class="bit-rarity">COMMON</span><div class="bit-card-icon lg bg-pink"><span class="px-slot" data-icn="scan"></span></div><h3>SCAN</h3><p>Reveal a clue. Cut the noise, keep the thrust.</p><div class="bit-stats"><div><span>COST</span><b>✦ 40</b></div><div><span>USES</span><b>×2</b></div><div><span>KEY</span><b>S</b></div></div></article>
+        <article class="bit-card bit-card-power"><span class="bit-rarity t-green">RARE</span><div class="bit-card-icon lg bg-green"><span class="px-slot" data-icn="shield"></span></div><h3>AEGIS SHIELD</h3><p>Block the next altitude loss. Stay orbital.</p><div class="bit-stats"><div><span>COST</span><b>✦ 80</b></div><div><span>USES</span><b>×1</b></div><div><span>KEY</span><b>H</b></div></div></article>
+        <article class="bit-card bit-card-power"><span class="bit-rarity t-yellow">LEGENDARY</span><div class="bit-card-icon lg bg-yellow"><span class="px-slot" data-icn="warp"></span></div><h3>WARP DRIVE</h3><p>Skip the question. −300m, but you survive.</p><div class="bit-stats"><div><span>COST</span><b>✦ 120</b></div><div><span>USES</span><b>×1</b></div><div><span>KEY</span><b>W</b></div></div></article>
+      </div>
+    </section>
+
+    <!-- QUEST: REACH ORBIT — 3 LVLS -->
+    <section class="bit-section bit-quest">
+      <h2 class="bit-section-title">QUEST: REACH ORBIT</h2>
+      <div class="bit-quest-track">
+        <div class="bit-quest-line" aria-hidden="true"></div>
+        <article class="bit-quest-step"><div class="bit-quest-icon"><span class="px-slot" data-icn="dust"></span></div><div class="bit-quest-card"><span class="bit-lvl">LVL 1: THE FORGE</span><h3>SAGOT · ANSWER</h3><p>Answer correctly. Easy +800m, Medium +1600m, Hard +2400m. Build streaks to ×1.5.</p></div></article>
+        <article class="bit-quest-step"><div class="bit-quest-icon"><span class="px-slot" data-icn="bolt"></span></div><div class="bit-quest-card"><span class="bit-lvl">LVL 2: ENCHANTMENT</span><h3>LIPAD · CLIMB</h3><p>Use RADAR, SCAN, BOOST. Manage 3 energy — wrong answers cost altitude.</p></div></article>
+        <article class="bit-quest-step"><div class="bit-quest-icon"><span class="px-slot" data-icn="rocket"></span></div><div class="bit-quest-card"><span class="bit-lvl">LVL 3: SUMMONING</span><h3>BAHAGI · ORBIT</h3><p>Save your record, share your flight card, return daily for the same seed.</p></div></article>
+      </div>
+    </section>
+
+    <!-- HIGH SCORE TABLE -->
+    <section class="bit-section bit-scores">
+      <h2 class="bit-section-title t-green">High Score Table</h2>
+      <div class="bit-table-wrap">
+        <table class="bit-table">
+          <thead><tr><th>RANK</th><th>METRIC CATEGORY</th><th>SCORE</th></tr></thead>
+          <tbody>
+            <tr><td class="t-yellow">1ST</td><td><span class="px-slot" data-icn="radar"></span> BEST ALTITUDE</td><td id="bit-score-alt">0m</td></tr>
+            <tr><td class="t-yellow">2ND</td><td><span class="px-slot" data-icn="dust"></span> STARDUST</td><td id="bit-score-dust">0</td></tr>
+            <tr><td class="t-pink">3RD</td><td><span class="px-slot" data-icn="bolt"></span> MAX STREAK</td><td id="bit-score-streak">×0</td></tr>
+            <tr><td>4TH</td><td><span class="px-slot" data-icn="shield"></span> DAILY BEST</td><td id="bit-score-daily">—</td></tr>
+          </tbody>
+        </table>
+        <button class="bit-btn bit-btn-pink bit-btn-sm" id="btn-bit-challenge">INSERT COIN TO CHALLENGE</button>
+      </div>
+    </section>
+
+    <!-- NPC CHAT LOG — GLOP & MOOMOO -->
+    <section class="bit-section bit-chat">
+      <h2 class="bit-section-title">NPC CHAT LOG</h2>
+      <div class="bit-chat-grid">
+        <div class="bit-bubble-wrap">
+          <div class="bit-avatar">👽</div>
+          <div class="bit-bubble bit-bubble-blue">
+            <span class="bit-bubble-meta">GLOP_ALIEN · Crash Site</span>
+            <p>GLOP the alien and MOOMOO the cow were on a delivery when their saucer stalled over Earth. They need thrust — from <em>your</em> knowledge!</p>
+            <button class="alien-encounter bit-bubble-action" id="alien-encounter" aria-label="Greet the alien courier">
+              <span class="encounter-label">TAP TO GREET ✌</span>
+              <span class="story-alien"><span data-px="alien"></span></span>
+              <span class="story-cow"><span data-px="cow"></span></span>
+            </button>
+            <div class="story-caption" style="margin-top:10px"><b>GLOP + MOOMOO</b><span>INTERGALACTIC DELIVERY CREW</span></div>
+          </div>
+        </div>
+        <div class="bit-bubble-wrap reverse">
+          <div class="bit-bubble bit-bubble-dark">
+            <span class="bit-bubble-meta">MOOMOO_COW · Orbiting</span>
+            <p>"Moo! Every correct answer is thrust. Every streak pushes us closer to home. Mapag-usisa ka — you are a pilot!"</p>
+          </div>
+          <div class="bit-avatar bg-yellow">🐄</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SELECT YOUR GEAR — SHOP TIERS -->
+    <section class="bit-section bit-gear">
+      <h2 class="bit-section-title">SELECT YOUR GEAR</h2>
+      <div class="bit-gear-grid">
+        <article class="bit-gear-card"><span class="bit-rarity">LVL 1</span><h3>NOOB GEAR</h3><div class="bit-gear-price">$0 <span>/ pilot</span></div><ul><li>1 Ship Instance</li><li>Standard Trail</li><li>Community Discord</li></ul><button class="bit-btn bit-btn-outline bit-btn-block" data-gear="noob">EQUIP</button></article>
+        <article class="bit-gear-card featured"><span class="bit-rarity t-pink">BEST VALUE</span><h3>PRO GEAR</h3><div class="bit-gear-price">$49 <span>/ pilot</span></div><ul><li>4 Ship Skins</li><li>Turbo Trails (Ion/Plasma)</li><li>Daily Seeds + Streaks</li></ul><button class="bit-btn bit-btn-pink bit-btn-block" id="btn-gear-pro">EQUIP</button></article>
+        <article class="bit-gear-card"><span class="bit-rarity t-yellow">LVL 99</span><h3>GOD MODE</h3><div class="bit-gear-price">???</div><ul><li>Unlimited Instances</li><li>Gold Ship + Solar Trail</li><li>Private Hangar</li></ul><button class="bit-btn bit-btn-outline bit-btn-block" id="btn-gear-god">CONTACT</button></article>
+      </div>
+    </section>
+
+    <!-- SAVE / FOOTER -->
+    <section class="bit-section bit-save">
+      <p class="auth-label">SAVE YOUR CALLSIGN — PROGRESS SAVES LOCALLY, PILOT FOREVER</p>
+      <div class="auth-buttons">
+        <button class="btn btn-auth" data-auth="google">Google</button><button class="btn btn-auth" data-auth="apple">Apple</button><button class="btn btn-auth" data-auth="email"><span class="px-slot" data-icn="mail"></span> Email</button>
+      </div>
+      <p class="auth-hint">No password needed for the demo — pick a callsign and launch. Cloud sync coming soon.</p>
+    </section>
+
+    <footer class="bit-footer">
+      <p class="bit-footer-title">GAME OVER</p>
+      <div class="bit-footer-links"><a href="#" id="foot-credits">CREDITS</a><a href="#" id="foot-legal">LEGAL</a><a href="#" id="foot-source">SOURCE</a></div>
+      <p class="bit-footer-copy">© 2026 LUNSAD. ALL RIGHTS RESERVED.<br>DESIGNED IN THE PHILIPPINES · LUNSAD IS TAGALOG FOR "TO LAUNCH"</p>
+    </footer>
   </div>
 </section>
 
@@ -53,9 +193,11 @@
 
 <!-- ============ PILOT SETUP (mock auth) ============ -->
 <section id="screen-onboard" class="screen">
+  <div class="onboard-overlay"></div>
   <div class="panel onboard-panel">
     <p class="panel-eyebrow" id="onboard-via">MISSION CONTROL</p>
     <h2 class="panel-title">Choose your pilot</h2>
+    <p class="onboard-sub">Pick your avatar and callsign — progress saves locally, pilot forever.</p>
     <div class="avatar-row" id="avatar-row">
       <button class="avatar-opt selected" data-avatar="👨‍🚀">👨‍🚀</button>
       <button class="avatar-opt" data-avatar="👩‍🚀">👩‍🚀</button>
@@ -72,9 +214,24 @@
 <!-- ============ HANGAR (home) ============ -->
 <section id="screen-hangar" class="screen">
   <div class="hangar-stars"></div>
+  <div class="hangar-particles">
+    <div class="hangar-particle"></div>
+    <div class="hangar-particle"></div>
+    <div class="hangar-particle"></div>
+    <div class="hangar-particle"></div>
+    <div class="hangar-particle"></div>
+    <div class="hangar-particle"></div>
+    <div class="hangar-particle"></div>
+    <div class="hangar-particle"></div>
+  </div>
+  <div class="hangar-overlay"></div>
   <div class="hangar-deco hangar-deco-l" aria-hidden="true"><div data-px="saturn"></div></div>
   <div class="hangar-deco hangar-deco-r" aria-hidden="true"><div data-px="moon"></div></div>
   <div class="hangar-deco hangar-deco-sat" aria-hidden="true"><div data-px="satellite"></div></div>
+  <div class="hangar-deco hangar-deco-pl" aria-hidden="true"><div data-px="planet"></div></div>
+  <div class="hangar-deco hangar-deco-alien" aria-hidden="true"><div data-px="alien"></div></div>
+  <div class="hangar-deco hangar-deco-cow" aria-hidden="true"><div data-px="cow"></div></div>
+  <div class="hangar-deco hangar-deco-ufo" aria-hidden="true"><div data-px="ufo"></div></div>
   <header class="hangar-top">
     <div class="hangar-brand">LUNSAD</div>
     <div class="hangar-stats">
@@ -91,7 +248,7 @@
       <div class="hangar-ship-name">LUNSAD-01</div>
       <div class="hangar-alt">CURRENT RECORD <b id="hangar-alt-num">0m</b></div>
     </div>
-    <button class="btn btn-primary btn-xl pulse" id="btn-play"><span class="px-slot" data-icn="rocket"></span> PLAY NOW</button>
+    <button class="btn btn-primary btn-xl" id="btn-play"><span class="px-slot" data-icn="rocket"></span> PLAY NOW</button>
     <div class="hangar-modes">
       <button class="mode-card" id="mode-solo"><span class="mode-icon px-slot" data-icn="rocket"></span><span>SOLO</span><em>10 questions · 3 energy</em></button>
       <button class="mode-card" id="mode-daily"><span class="mode-icon px-slot" data-icn="scan"></span><span>DAILY</span><em id="daily-sub">seed of the day</em></button>
@@ -105,6 +262,7 @@
 
 <!-- ============ GAME ============ -->
 <section id="screen-game" class="screen">
+  <div class="game-overlay"></div>
   <!-- The vertical world: translated by JS as altitude changes -->
   <div id="world">
     <div id="world-inner"><!-- zones injected by JS --></div>
@@ -220,6 +378,13 @@
 <!-- ============ RESULTS ============ -->
 <section id="screen-results" class="screen">
   <div class="landing-stars"></div>
+  <div class="results-particles">
+    <div class="results-particle"></div>
+    <div class="results-particle"></div>
+    <div class="results-particle"></div>
+    <div class="results-particle"></div>
+    <div class="results-particle"></div>
+  </div>
   <div class="panel results-panel">
     <p class="panel-eyebrow" id="results-eyebrow">MISSION COMPLETE</p>
     <h2 class="results-title" id="results-title">YOU REACHED ORBIT</h2>
@@ -239,7 +404,7 @@
   </div>
 </section>
 
-<script src="js/data.js"></script>
-<script src="js/app.js?v=20260824"></script>
+<script src="js/data.js?v=20260837"></script>
+<script src="js/app.js?v=20260837"></script>
 </body>
 </html>

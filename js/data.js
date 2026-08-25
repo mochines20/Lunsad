@@ -207,8 +207,8 @@ const SHIP_BODY = [
   ".KBBbWWKKKKKKWWKbbK.",
   ".KbbKWWWWWWWWWWKbbK.",
   ".KbbKWWWWWWWWWWKbbK.",
-  ".KbbKWWKKKKKWWKbbK.",
-  "..KK.KKKKKKKKK.KK.."
+  ".KbbKWWKKKKKKWWKbbK.",
+  "..KK.KKKKKKKKKK.KK.."
 ];
 
 /* ============================================================
@@ -252,8 +252,8 @@ const PXART = {
     ".....EEEEEEEEEEEEEE.....",
     "...EEEENNEEEEEEECCEEE...",
     "..EEENNNNNEECCWWWCEEEE..",
-    ".EENNNNNNNNEEWWWWCEEEE.",
-    ".ENNNNNNNNEEEEEEWWEEEE.",
+    "EEENNNNNNNNEEWWWWCEEEEEE",
+    "EEENNNNNNNNEEEEEEWWEEEEE",
     "EENNNNNNEEEEEEEEEWWEEEEE",
     "EENNNNNEEEEEEEEEEEEEEEEE",
     "EEENNEEEEEEEEWWEEEEEEEEE",
@@ -272,7 +272,7 @@ const PXART = {
     "......EEEEEEEEEEEE......",
     "........EEEEEEEE........"
   ]},
-  cloud: { w: 14, rows: [
+  cloud: { w: 16, rows: [
     ".....CCCCC......",
     "...CCCCCCCCC....",
     "..CCCCCCCCCCCC..",
@@ -304,26 +304,27 @@ const PXART = {
     "..KNNNNK..",
     "...KKKK..."
   ]},
-  ufo: { w: 16, rows: [
+   ufo: { w: 16, rows: [
     "......KKKK......",
     "....KKGGGGKK....",
     "...KGGKGGKGGK...",
-    "..KGGGGGGGGGK..",
-    ".KKKKKKKKKKKKK.",
-    "KRKYKKKKKKKYKRK",
-    ".KKKKKKKKKKKKK.",
-    "...KKKKKKKKK..."
+    "..KGGGGGGGGGGK..",
+    ".KKKKKKKKKKKKKK.",
+    "KRKYKKKKKKKKYKRK",
+    ".KKKKKKKKKKKKKK.",
+    "...KKKKKKKKKK..."
   ]},
-  cow: { w: 12, rows: [
-    "..KK.....KK.",
-    ".KWWK...KWWK",
-    "KWWWWKKKWWWK",
-    "KWKWWWWWKWWK",
-    "KWWWWWWWWWWK",
-    "KWWKKWWKKWWK",
-    "KWWWWWWWWWWK",
-    ".KWWWWWWWWK.",
-    "..K.K..K.K.."
+  cow: { w: 14, rows: [
+    "..TT......TT..",
+    ".KWWK....KWWK.",
+    "KWWWWWWWWWWWWK",
+    "KWWKWWWWWWKWWK",
+    "KWWWWWWWWWWWWK",
+    "KWWKKWWWWKKWWK",
+    "KWWWWTTTTWWWWK",
+    "KWWWWKTKTWWWWK",
+    ".KWWWWQQQQWWK.",
+    "..K.K....K.K.."
   ]},
   tree: { w: 10, rows: [
     "...NNNN...",
@@ -337,7 +338,7 @@ const PXART = {
     "....HH....",
     "...HHHH..."
   ]},
-  bush: { w: 12, rows: [
+  bush: { w: 13, rows: [
     "...NNN...NNN.",
     ".NNNNNNNNNNN.",
     "NNNNNNNNNNNNN",
@@ -373,7 +374,7 @@ const PXART = {
     "......KK........",
     "......KW........",
     "XXXXKKWWKKXXXX..",
-    "XxXxKKWSKKXxXx..",
+    "XbXbKKWSKKXbXb..",
     "XXXXKKWWKKXXXX..",
     "......KK........"
   ]},
@@ -396,8 +397,8 @@ const PXART = {
     "........TTTTTTTTTT........",
     ".......TTtTTTTTTtTT.......",
     "......TTTTTTTTTTTTTT......",
-    "..TTTTTTTTTTTTTTTTTTTT....",
-    ".TTTTtTTTTTTTTTTtTTTTT..",
+    "..TTTTTTTTTTTTTTTTTTTTTT..",
+    ".TTTTtTTTTTTTTTTtTTTTTTT..",
     "TTTTTTTTTTTTTTTTTTTTTTTTTT",
     "..TTTTtTTTTTTTTTTtTTTT....",
     "......TTTTTTTTTTTTTT......",
@@ -418,6 +419,40 @@ const PXART = {
     "..P..PPPPP..PP..",
     ".....P..PP......",
     "..........P....."
+  ]},
+  /* banded exoplanet — deep-space/galaxy zone decoration */
+  planet: { w: 18, rows: [
+    ".....KXXXXXXK.....",
+    "...KXQQXXXXPPPK...",
+    "..KXQQXXXXXXXPPK..",
+    ".KQQXXXXXXXXXPPPK.",
+    "KPQQXXXXXXXXXPPPPK",
+    "KPPQQXXXXXXOPPPPPK",
+    "KPPQQXXXXXOOPPPPPK",
+    "KPPPXXXXXXOOPPPPPK",
+    "KPPPPXXXXXXXXPPPPK",
+    "KmPPPPXXXXXXPPPPmK",
+    "KmmPPPPXXXXPPPPmmK",
+    "KmmmPPPPXXPPPPmmmK",
+    "KmmmmPPPPPPPPmmmmK",
+    "KbbmmmmPPPPmmmmbbK",
+    ".KbbmmmmmmmmmmbbK.",
+    "..KbmmmmmmmmmmbK..",
+    "...KbmmmmmmmmbK...",
+    ".....KbmmmbbK....."
+  ]},
+  /* MOOMOO takes the yoke — cow-piloted saucer, GLOP riding shotgun */
+  ufoCow: { w: 28, rows: [
+    "............KKKK............",
+    "..........KGGGGGGK..........",
+    "........KGWWWWGGNNNK........",
+    "........KGWKWWGYNKNK........",
+    "........KGWWKKGGNNNK........",
+    "........KGWWWWGGNNNK........",
+    "....KKKKKKKKKKKKKKKKKKKK....",
+    "..KMMMMMMMMMMMMMMMMMMMMMMK..",
+    ".KMRMYMRMYMRMYMRMYMRMYMRMYK.",
+    "......KKKKKKKKKKKKKKKK......"
   ]}
 };
 
@@ -557,7 +592,18 @@ const PXICON = {
     "..YYY..",
     "..KKK..",
     "...K..."
-  ]}
+  ]},
+  signal: { w: 9, rows: [
+    "....K....",
+    "...K.K...",
+    "..K...K..",
+    ".K.....K.",
+    "K..KKK..K",
+    "....K....",
+    "...KKK...",
+    "..KKKKK..",
+    "....K...."
+  ]},
 };
 PAL.K2 = '#3a4664';
 

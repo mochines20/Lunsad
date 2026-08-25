@@ -120,6 +120,7 @@ function dailySeed() {
 function show(id) {
   $$('.screen').forEach(s => s.classList.remove('active'));
   $(id).classList.add('active');
+  document.body.classList.toggle('landing-mode', id === '#screen-landing');
 }
 
 /* ---------------- tiny synth ---------------- */
@@ -238,10 +239,12 @@ function decorationsFor(id) {
     case 'deepspace':
       return `
         <div class="deco deco-saturn-svg float-slow" style="top:18%;right:6%;width:230px">${px(PXART.saturn)}</div>
+        <div class="deco float-slow" style="top:58%;left:7%;width:120px">${px(PXART.planet)}</div>
         ${starField(70)}`;
     case 'galaxy':
       return `
         <div class="deco deco-galaxy-svg" style="top:12%;left:50%;width:240px;margin-left:-120px">${px(PXART.galaxy)}</div>
+        <div class="deco float-slow" style="top:52%;right:9%;width:96px">${px(PXART.planet)}</div>
         ${starField(90)}`;
     default: return '';
   }
@@ -370,16 +373,22 @@ function spawnAsteroid() {
 function spawnEasterEgg() {
   if (!CONFIG.easterEggs || !G.active) return;
   const layer = $('#ambient-layer');
-  const type = Math.random() < 0.5 ? 'alien' : 'ufo';
+  const roll = Math.random();
+  const type = roll < 0.4 ? 'alien' : roll < 0.75 ? 'ufo' : 'cowUfo';
   const wrap = document.createElement('div');
   wrap.className = 'ee ee-' + type;
   if (type === 'alien') {
     wrap.innerHTML = `<div class="ee-alien-svg">${px(PXART.alien)}</div><div class="ee-alien-arm"></div>`;
-  } else {
+  } else if (type === 'ufo') {
     wrap.innerHTML = `
       <div class="ee-ufo-svg">${px(PXART.ufo)}</div>
       <div class="ee-beam"></div>
       <div class="ee-cow">${px(PXART.cow)}</div>`;
+  } else {
+    // rare treat: MOOMOO at the yoke, GLOP riding shotgun
+    wrap.innerHTML = `
+      <span class="ee-moo">MOO!</span>
+      <div class="ee-ufo-svg">${px(PXART.ufoCow)}</div>`;
   }
   layer.appendChild(wrap);
   setTimeout(() => wrap.remove(), 9000);
@@ -454,9 +463,24 @@ function mulberry32(a) {
 
 function drawQuestions(seed) {
   const rng = seed == null ? Math.random : mulberry32(seed);
+  // Fisher-Yates — unbiased, and stable for a given seed so Daily/DUO
+  // pilots always see the same questions in the same option order
+  const shuffle = arr => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
   const by = d => QUESTIONS.filter(q => q.d === d);
-  const pick = (arr, n) => arr.sort(() => rng() - 0.5).slice(0, n);
-  return [...pick(by(1), 3), ...pick(by(2), 4), ...pick(by(3), 3)];
+  const pick = (arr, n) => shuffle(arr).slice(0, n);
+  // mix option positions per question — correct answers must not sit in slot 1 every time
+  const mixOptions = q => {
+    const order = shuffle(q.a.map((_, i) => i));
+    return { ...q, a: order.map(i => q.a[i]), c: order.indexOf(q.c) };
+  };
+  return [...pick(by(1), 3), ...pick(by(2), 4), ...pick(by(3), 3)].map(mixOptions);
 }
 
 function startDuo() {
@@ -683,12 +707,6 @@ const BUY_COSTS = { radar: 40, scan: 40, boost: 80, shield: 80, warp: 120 };
 function canAfford(kind) { return G.dust >= BUY_COSTS[kind]; }
 
 /* ---------------- boosters ---------------- */
-function parseDustButton(btn) {
-  const kind = btn.dataset.boost;
-  const buy = canAfford(kind) ? '' : 'data-icn="lock"';
-  return { kind, buy };
-}
-
 function useBoost(kind) {
   if (!G.active || G.answered) return;
   const owned = G.boosts[kind] > 0;
@@ -897,6 +915,7 @@ function goHangar() {
   $('#hangar-alt-num').textContent = fmtAlt(profile.bestAlt);
   $('#hangar-streak').textContent = profile.streakDays || 0;
   updateDailyCard();
+  try { updateBitScores(); } catch {}
   show('#screen-hangar');
 }
 
@@ -970,6 +989,30 @@ $('#btn-map-close').onclick = () => $('#modal-map').classList.add('hidden');
 $('#btn-help-landing').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
 $('#btn-help-hangar').onclick = () => { sfx.click(); $('#modal-help').classList.remove('hidden'); };
 $('#btn-help-close').onclick = () => { sfx.click(); $('#modal-help').classList.add('hidden'); };
+
+// 8BIT_CLOUD landing wiring
+function updateBitScores() {
+  const sAlt = $('#bit-score-alt'), sDust = $('#bit-score-dust'), sStreak = $('#bit-score-streak'), sDaily = $('#bit-score-daily');
+  if (sAlt) sAlt.textContent = fmtAlt(profile.bestAlt);
+  if (sDust) sDust.textContent = profile.dust.toLocaleString();
+  if (sStreak) sStreak.textContent = '×' + (profile.bestAlt ? (profile.streakDays || 0) : 0);
+  if (sDaily) sDaily.textContent = profile.daily?.bestAlt ? fmtAlt(profile.daily.bestAlt) : '—';
+}
+const bitHeroBtn = $('#btn-hero-insert');
+if (bitHeroBtn) bitHeroBtn.onclick = () => $('#btn-launch-start').click();
+const bitChallenge = $('#btn-bit-challenge');
+if (bitChallenge) bitChallenge.onclick = () => { sfx.click(); startMission(); };
+const navPricing = $('#nav-pricing');
+if (navPricing) navPricing.onclick = (e) => { e.preventDefault(); sfx.click(); if (profile.name) { goHangar(); setTimeout(openShop, 300); } else $('#btn-launch-start').click(); };
+const navLogin = $('#nav-login');
+if (navLogin) navLogin.onclick = (e) => { e.preventDefault(); sfx.click(); if (profile.name) goHangar(); else show('#screen-onboard'); };
+const gearPro = $('#btn-gear-pro');
+if (gearPro) gearPro.onclick = () => { sfx.click(); if (profile.name) { goHangar(); setTimeout(openShop, 300); } else $('#btn-launch-start').click(); };
+const gearGod = $('#btn-gear-god');
+if (gearGod) gearGod.onclick = () => { sfx.click(); openMap(); };
+$$('[data-gear="noob"]').forEach(b => b.onclick = () => { sfx.click(); startMission(); });
+const hamburger = $('.bit-hamburger');
+if (hamburger) hamburger.onclick = () => { const nav = $('.bit-nav-center'); if (nav) nav.classList.toggle('open'); };
 /* ---------------- shareable result card (canvas PNG) ---------------- */
 function shareResultCard() {
   sfx.click();
@@ -1068,6 +1111,54 @@ $$('[data-px]').forEach(el => { el.innerHTML = px(PXART[el.dataset.px], el.datas
 renderShips(); // re-skin any ship renders with the player's owned skin + trail
 $$('[data-icn]').forEach(el => { el.innerHTML = pxIcon(el.dataset.icn, 'px-icn'); });
 
+const encounter = $('#alien-encounter');
+if (encounter) encounter.addEventListener('click', () => {
+  encounter.classList.toggle('greeted');
+  const label = encounter.querySelector('.encounter-label');
+  if (label) label.textContent = encounter.classList.contains('greeted') ? 'PEACE RECEIVED ✦' : 'TAP TO GREET';
+  sfx.click();
+});
+
+// Scroll-bound landing planet: stepped sprite frames keep the pixel silhouette crisp.
+const landing = $('#screen-landing');
+const planetFrames = $$('.planet-frame');
+const landingUfo = $('#landing-ufo');
+let landingScrollFrame = 0;
+let landingScrollQueued = false;
+let landingUfoTimer;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (landing) landing.dataset.planetFrame = '0';
+function updateLandingPlanet() {
+  landingScrollQueued = false;
+  if (!landing || reducedMotion || !planetFrames.length) return;
+  const maxScroll = Math.max(1, landing.scrollHeight - landing.clientHeight);
+  const progress = Math.min(1, Math.max(0, landing.scrollTop / maxScroll));
+  const nextFrame = Math.min(planetFrames.length - 1, Math.floor(progress * planetFrames.length));
+  if (nextFrame === landingScrollFrame) return;
+  const previousFrame = landingScrollFrame;
+  const crossed = nextFrame - previousFrame;
+  landingScrollFrame = nextFrame;
+  landing.dataset.planetFrame = String(nextFrame);
+  planetFrames.forEach((frame, index) => frame.classList.toggle('is-active', index === nextFrame));
+  const popupFrame = [2, 4, 6].find(frame => previousFrame < frame && frame <= nextFrame);
+  if (crossed > 0 && popupFrame && landingUfo) {
+    clearTimeout(landingUfoTimer);
+    landingUfo.classList.remove('popup');
+    void landingUfo.offsetWidth;
+    landingUfo.classList.add('popup');
+    landing.dataset.ufoPopup = String(popupFrame);
+    landingUfoTimer = setTimeout(() => landingUfo.classList.remove('popup'), 2600);
+  }
+}
+function queueLandingPlanetUpdate() {
+  if (!landingScrollQueued) { landingScrollQueued = true; requestAnimationFrame(updateLandingPlanet); }
+}
+if (landing && !reducedMotion) {
+  landing.addEventListener('scroll', queueLandingPlanetUpdate, { passive: true });
+  window.addEventListener('resize', queueLandingPlanetUpdate, { passive: true });
+  queueLandingPlanetUpdate(); // sync frames if the page loads mid-scroll
+}
+
 function renderEnergy() {
   $('#hud-energy').innerHTML =
     pxIcon('heart', 'px-icn px-heart').repeat(Math.max(0, G.energy)) +
@@ -1076,4 +1167,5 @@ function renderEnergy() {
 }
 buildWorld();
 requestAnimationFrame(cameraLoop);
+try { updateBitScores(); } catch {}
 show('#screen-landing');

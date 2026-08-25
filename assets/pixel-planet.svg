@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" shape-rendering="crispEdges" role="img" aria-labelledby="title desc">
+  <title id="title">LUNSAD pixel planet</title>
+  <desc id="desc">A blocky pixel-art Earth horizon with neon green land and blue oceans.</desc>
+  <defs>
+    <clipPath id="planet-clip">
+      <path d="M24 224V152h8v-32h8V96h16V72h16V56h24V40h32V32h80v8h32v16h24v16h16v24h16v24h8v32h8v72Z"/>
+    </clipPath>
+  </defs>
+  <path fill="#10181f" d="M24 224V152h8v-32h8V96h16V72h16V56h24V40h32V32h80v8h32v16h24v16h16v24h16v24h8v32h8v72Z"/>
+  <g clip-path="url(#planet-clip)">
+    <rect x="24" y="32" width="272" height="192" fill="#176a82"/>
+    <path fill="#2b9db0" d="M24 80h32v-16h40v8h24v16h32v24h24v32h24v24h24v56H24Z"/>
+    <path fill="#126076" d="M208 32h88v192h-48v-32h-24v-32h-16v-40h-16v-32h16Z"/>
+    <path fill="#c8ff4d" d="M48 80h24V64h24v8h24v16h16v24h16v16h24v24h-16v16h-24v16H96v16H72v-16H48v-24H32v-24h16Z"/>
+    <path fill="#71b83f" d="M40 104h24v-16h32v16h24v16h16v24h-16v16H96v16H72v-16H48v-24H40Z"/>
+    <path fill="#dfffb0" d="M72 64h24v8h24v8h16v8H96v8H72v8H48v-16h24Z"/>
+    <path fill="#75c8d0" d="M176 56h24v8h24v16h24v16h16v16h-32v-8h-24V88h-32Z"/>
+    <path fill="#c8ff4d" d="M232 112h32v16h16v24h-24v16h-24v-24h-16v-16h16Z"/>
+    <path fill="#71b83f" d="M248 128h24v16h-16v16h-16v-16h8Z"/>
+    <path fill="#e6f5d0" d="M136 120h24v8h16v16h-16v8h-24v-8h-16v-16h16Z"/>
+    <path fill="#0d4c62" d="M32 184h40v16h24v24H32ZM176 176h32v16h24v32h-56ZM256 192h40v32h-40Z"/>
+    <path fill="#f0f4dd" d="M40 152h16v8h24v8H56v8H40ZM208 72h16v8h16v8h-24v8h-16v-8h8Z"/>
+    <g fill="#9fdc57">
+      <rect x="56" y="104" width="8" height="8"/><rect x="80" y="88" width="8" height="8"/><rect x="104" y="136" width="8" height="8"/>
+      <rect x="128" y="168" width="8" height="8"/><rect x="240" y="152" width="8" height="8"/><rect x="264" y="104" width="8" height="8"/>
+    </g>
+    <g fill="#dfffb0">
+      <rect x="88" y="56" width="16" height="8"/><rect x="112" y="48" width="24" height="8"/><rect x="144" y="40" width="24" height="8"/>
+      <rect x="176" y="48" width="16" height="8"/><rect x="200" y="56" width="16" height="8"/>
+    </g>
+    <g fill="#0b4355" opacity=".9">
+      <rect x="24" y="216" width="272" height="8"/><rect x="40" y="208" width="32" height="8"/><rect x="240" y="208" width="40" height="8"/>
+    </g>
+  </g>
+  <path fill="#c8ff4d" d="M32 224h248v8H32ZM40 216h16v8H40ZM264 216h16v8h-16Z"/>
+  <path fill="#7bb43a" d="M24 224h8v8h-8ZM280 224h8v8h-8Z"/>
+</svg>
